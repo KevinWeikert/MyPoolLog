@@ -1,0 +1,143 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="Mark Otto, Jacob Thornton, and Bootstrap contributors">
+    <meta name="generator" content="Hugo 0.88.1">
+    <!-- Change Title -->
+    <title>Login or Register</title> 
+
+    <link rel="canonical" href="https://getbootstrap.com/docs/5.1/examples/heroes/">
+
+    
+
+    <!-- Bootstrap core CSS -->
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='/css/bootstrap.css') }}">
+
+    <style>
+      .bd-placeholder-img {
+        font-size: 1.125rem;
+        text-anchor: middle;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        user-select: none;
+      }
+
+      @media (min-width: 768px) {
+        .bd-placeholder-img-lg {
+          font-size: 3.5rem;
+        }
+      }
+    </style>
+
+    
+    <!-- Custom styles for this template -->
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='/css/headers.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='/css/heroes.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='/css/style.css') }}">
+  </head>
+  <body>
+    
+<main>
+
+  <div class="container">
+    <header class="d-flex flex-wrap justify-content-center py-3 mb-4 border-bottom">
+      <a href="/" class="d-flex align-items-center mb-3 mb-md-0 me-md-auto text-dark text-decoration-none">
+        <img class="logo" src="{{ url_for('static', filename='/images/dojo_img.webp') }}">
+        <span class="fs-4">Login & Register</span>
+      </a>
+
+      <!-- <ul class="nav nav-pills">
+        <li class="nav-item"><a href="/" class="nav-link active" aria-current="page">Home</a></li>
+        <li class="nav-item"><a href="/results" class="nav-link">Survey Results</a></li>
+      </ul> -->
+    </header>
+  </div>
+
+  <div class="container col-xl-10 col-xxl-8 px-4 py-5">
+    <div class="row align-items-start g-lg-5 py-5">
+      <div class="col-lg-7 text-center text-lg-start">
+        <h1 class="display-4 fw-bold lh-1 mb-3">Register</h1>
+        <!-- <p class="col-lg-10 fs-4 text-muted">If you haven't been here before please register below.</p> -->
+        {% with messages = get_flashed_messages(category_filter=["registration"]) %}     <!-- declare a variable called messages -->
+        {% if messages %}                            <!-- check if there are any messages -->
+            {% for message in messages %}            <!-- loop through the messages -->
+                <p>{{message}}</p>                   <!-- display each message in a paragraph tag -->
+            {% endfor %}
+        {% endif %}
+      {% endwith %}
+      <!-- Start of Survey -->
+      <form class="p-4 p-md-5 border rounded-3 bg-light" action="/register" method="post">
+        <!-- First Name Field -->
+        <div class="form-floating mb-3">
+          <input type="text" class="form-control" id="floatingFirstName"  placeholder="First Name" name="first_name"> 
+          <label for="floatingFirstName">First Name</label>
+        </div>
+        <!-- Last Name Field -->
+        <div class="form-floating mb-3">
+          <input type="text" class="form-control" id="floatingLastName"  placeholder="Last Name" name="last_name"> 
+          <label for="floatingLastName">Last Name</label>
+        </div>
+        <!-- Email Field -->
+        <div class="form-floating mb-3">
+          <input type="email" class="form-control" id="floatingEmail"  placeholder="Email" name="email"> 
+          <label for="floatingEmail">Email</label>
+        </div>
+        <!-- Password Field -->
+        <div class="form-floating mb-3">
+          <input type="password" class="form-control" id="floatingPassword"  placeholder="Password" name="password"> 
+          <label for="floatingPassword">Password</label>
+        </div>
+        <!-- Confirm Password Field -->
+        <div class="form-floating mb-3">  
+          <input type="password" class="form-control" id="floatingConfirmPassword"  placeholder="Confirm Password" name="confirm_password"> 
+          <label for="floatingConfirmPassword">Confirm Password</label>
+        </div>
+        <!-- Check Box for Terms of Service -->
+        <div class="form-check">
+          <input class="form-check-input" type="checkbox" value="1" name="terms_of_service" >
+          <label class="form-check-label" for="flexCheckDefault">
+            <small class="text-muted">I agree to the terms of use.</small>
+          </label>
+        </div>
+        <hr class="my-4">
+        <input class="w-100 btn btn-lg btn-primary" type="submit" value="Register">
+      </form>
+      </div>
+
+      <div class="col-md-10 mx-auto col-lg-5">
+        <h1 class="display-4 fw-bold lh-1 mb-3">Login</h1>
+        {% with messages = get_flashed_messages(category_filter=["login"]) %}     <!-- declare a variable called messages -->
+          {% if messages %}                            <!-- check if there are any messages -->
+              {% for message in messages %}            <!-- loop through the messages -->
+                  <p>{{message}}</p>                   <!-- display each message in a paragraph tag -->
+              {% endfor %}
+          {% endif %}
+        {% endwith %}
+        <!-- Start of Survey -->
+        <form class="p-4 p-md-5 border rounded-3 bg-light" action="/login" method="post">
+          <!-- Email Field -->
+          <div class="form-floating mb-3">
+            <input type="email" class="form-control" id="floatingEmail"  placeholder="Email" name="email"> 
+            <label for="floatingEmail">Email</label>
+          </div>
+          <!-- Password Field -->
+          <div class="form-floating mb-3">
+            <input type="password" class="form-control" id="floatingPassword"  placeholder="Password" name="password"> 
+            <label for="floatingPassword">Password</label>
+          </div>
+          <input class="w-100 btn btn-lg btn-primary" type="submit" value="Login">
+        </form>
+      </div>
+    </div>
+  </div>
+</main>
+
+
+    <script type="text/javascript" src="{{ url_for('static', filename='/js/bootstrap.js') }}"></script> 
+
+      
+  </body>
+</html>

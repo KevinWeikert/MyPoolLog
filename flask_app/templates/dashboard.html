@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="Mark Otto, Jacob Thornton, and Bootstrap contributors">
+    <meta name="generator" content="Hugo 0.88.1">
+    <title>Dashboard</title>
+
+    <link rel="canonical" href="https://getbootstrap.com/docs/5.1/examples/heroes/">
+
+    
+
+    <!-- Bootstrap core CSS -->
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='/css/bootstrap.css') }}">
+
+    <style>
+      .bd-placeholder-img {
+        font-size: 1.125rem;
+        text-anchor: middle;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        user-select: none;
+      }
+
+      @media (min-width: 768px) {
+        .bd-placeholder-img-lg {
+          font-size: 3.5rem;
+        }
+      }
+    </style>
+
+    
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='/css/headers.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='/css/heroes.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='/css/style.css') }}">
+  </head>
+  <body>
+    
+<main>
+  <div class="container">
+    <header class="d-flex flex-wrap justify-content-center py-3 mb-4 border-bottom">
+      <a href="/" class="d-flex align-items-center mb-3 mb-md-0 me-md-auto text-dark text-decoration-none">
+        <img class="logo" src="{{ url_for('static', filename='/images/dojo_img.webp') }}">
+        <span class="fs-4">Login & Register</span>
+      </a>
+
+      <ul class="nav nav-pills align-items-center">
+        <li class="nav-item"><a href="/logout" class="btn btn-primary btn-sm px-4 gap-3">Logout</a></li>
+        <!-- <li class="nav-item"><a href="/results" class="nav-link">Survey Results</a></li> -->
+      </ul>
+    </header>
+
+  <div class="px-4 py-5 my-5 text-center">
+    <h1 class="display-5 fw-bold">Welcome {{session['first_name']}}!</h1>
+    <div class="col-lg-6 mx-auto">
+      <p class="lead mb-4">Thank you for creating an account with us. Here is your dashboard.</p>
+      <div class="d-grid gap-2 d-sm-flex justify-content-sm-center">
+        
+        <!-- <button type="button" class="btn btn-outline-secondary btn-lg px-4">Secondary</button> -->
+      </div>
+    </div>
+  </div>
+</main>
+
+
+    <script type="text/javascript" src="{{ url_for('static', filename='/js/bootstrap.js') }}"></script> 
+
+      
+  </body>
+</html>
