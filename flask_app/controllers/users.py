@@ -24,11 +24,11 @@ def register():
             'password': pw_hash,
             'terms_of_service': request.form['terms_of_service']
         }
-        print(data['terms_of_service'])
         user_id = user.User.save_user(data)
         session['user_id'] = user_id
         session['first_name'] = request.form['first_name']
         return redirect('/dashboard')
+        
 
 @app.route('/login', methods =['POST'])
 def login():

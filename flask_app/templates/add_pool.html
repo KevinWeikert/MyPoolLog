@@ -1,0 +1,142 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="Mark Otto, Jacob Thornton, and Bootstrap contributors">
+    <meta name="generator" content="Hugo 0.88.1">
+    <title>Dashboard</title>
+
+    <link rel="canonical" href="https://getbootstrap.com/docs/5.1/examples/heroes/">
+
+    
+
+    <!-- Bootstrap core CSS -->
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='/css/bootstrap.css') }}">
+
+    <style>
+      .bd-placeholder-img {
+        font-size: 1.125rem;
+        text-anchor: middle;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        user-select: none;
+      }
+
+      @media (min-width: 768px) {
+        .bd-placeholder-img-lg {
+          font-size: 3.5rem;
+        }
+      }
+    </style>
+
+    
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='/css/headers.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='/css/heroes.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='/css/style.css') }}">
+  </head>
+  <body>
+    
+<main>
+  <div class="container">
+    <header class="d-flex flex-wrap justify-content-center py-3 mb-4 border-bottom">
+      <a href="/" class="d-flex align-items-center mb-3 mb-md-0 me-md-auto text-dark text-decoration-none">
+        <img class="logo" src="{{ url_for('static', filename='/images/poollog-logo.png') }}">
+        <span class="fs-4">My Pool Log</span>
+      </a>
+
+      <ul class="nav nav-pills align-items-center">
+        <li class="nav-item"><a href="/logout" class="btn btn-primary btn-sm px-4 gap-3">Logout</a></li>
+        <!-- <li class="nav-item"><a href="/results" class="nav-link">Survey Results</a></li> -->
+      </ul>
+    </header>
+
+  <div class="px-4 py-5 my-5 text-center">
+    <h1 class="display-5 fw-bold">Welcome {{session['first_name']}}!</h1>
+    <div class="col-lg-6 mx-auto">
+      <p class="lead mb-4">Thank you for creating an account with us. Here is your dashboard.</p>
+      <div class="text-center text-lg-start">
+        <h1 class="display-4 fw-bold lh-1 mb-3">Add Pool</h1>
+        <!-- <p class="col-lg-10 fs-4 text-muted">If you haven't been here before please register below.</p> -->
+        {% with messages = get_flashed_messages() %}     <!-- declare a variable called messages -->
+        {% if messages %}                            <!-- check if there are any messages -->
+            {% for message in messages %}            <!-- loop through the messages -->
+                <p>{{message}}</p>                   <!-- display each message in a paragraph tag -->
+            {% endfor %}
+        {% endif %}
+      {% endwith %}
+      <!-- Start of Survey -->
+      <form class="p-4 p-md-5 border rounded-3 bg-light" action="/add-pool-db" method="POST">
+        <!-- Pool Name Field -->
+        <div class="form-floating mb-3">
+          <input type="text" class="form-control" id="floatingName"  placeholder="Pool Name" name="name"> 
+          <label for="floatingName">Pool Name</label>
+        </div>
+        <!-- Address Field -->
+        <div class="form-floating mb-3">
+          <input type="text" class="form-control" id="floatingAddress"  placeholder="Address" name="street_address"> 
+          <label for="floatingAddress">Address</label>
+        </div>
+        <!-- City -->
+        <div class="form-floating mb-3">
+          <input type="text" class="form-control" id="floatingCity"  placeholder="City" name="city"> 
+          <label for="floatingCity">City</label>
+        </div>
+        <!-- State -->
+        <div class="form-floating mb-3">
+          <select class="form-select" name="state" id="floatingState" aria-label="Select State">
+            {%for key, value in states.items()%}
+            <option value="{{key}}">{{value}}</option>
+            {%endfor%}
+          </select>
+          <label for="floatingState">State</label>
+        </div>
+        <!-- Zipcode -->
+        <div class="form-floating mb-3">
+          <input type="text" class="form-control" id="floatingZipcode"  placeholder="Zipcode" name="zipcode"> 
+          <label for="floatingZipcode">Zipcode</label>
+        </div>
+        <!-- Water Volume -->
+        <div class="form-floating mb-3">
+          <input type="number" class="form-control" id="floatingWaterVolume"  placeholder="65000" name="water_volume"> 
+          <label for="floatingwater_volume">Water Volume in Gallons</label>
+        </div>
+
+        <!-- Indoor or Outdoor -->
+        <div class="form-floating mb-3">
+          Is your pool indoor or outdoor?
+        </div>
+        <div class="form-check form-check-inline">
+          <input class="form-check-input" type="radio" name="indoor_outdoor" id="indoor" value="0">
+          <label class="form-check-label" for="indoor">Indoor</label>
+        </div>
+        <div class="form-check form-check-inline">
+          <input class="form-check-input" type="radio" name="indoor_outdoor" id="Outdoor" value="1">
+          <label class="form-check-label" for="Outdoor">Outdoor</label>
+        </div>
+        <!-- Sanitizer -->
+        <div class="form-floating mb-3 mt-3">
+          <select class="form-select" id="floatingSanitizer" name="sanitizer" aria-label="Select Sanitizer">
+            <option>Select a Sanitizer</option>
+            {%for key, value in sanitizers.items()%}
+            <option value="{{key}}">{{value}}</option>
+            {%endfor%}
+          </select>
+          <label for="floatingSanitizer">Sanitizer</label>
+        </div>
+        <input type="hidden" name="user_id" value="{{session['user_id']}}">
+        <hr class="my-4">
+        <input class="w-100 btn btn-lg btn-primary" type="submit" value="Add Pool">
+      </form>
+      </div>
+    </div>
+  </div>
+</main>
+
+
+    <script type="text/javascript" src="{{ url_for('static', filename='/js/bootstrap.js') }}"></script> 
+
+      
+  </body>
+</html>
