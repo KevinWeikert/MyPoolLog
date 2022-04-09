@@ -1,14 +1,16 @@
+from multiprocessing import pool
 from flask_app.config.mysqlconnection import connectToMySQL
 from flask_app import app
 from flask import flash
 from flask_bcrypt import Bcrypt
+from flask_app.models import pool
 bcrypt = Bcrypt(app)
 import re
 
 
 EMAIL_REGEX = re.compile(r'^[a-zA-Z0-9.+_-]+@[a-zA-Z0-9._-]+\.[a-zA-Z]+$')
 class User:
-    database_schema_name = 'MyPoolLog' # Insert Database Schema Name
+    database_schema_name = 'my_pool_log' # Insert Database Schema Name
 
     def __init__(self, data):
         self.id = data['id']
@@ -16,9 +18,11 @@ class User:
         self.last_name = data['last_name']
         self.email = data['email']
         self.password = data['password']
+        self.phone = data['phone']
         self.terms_of_service = data['terms_of_service']
         self.created_at = data['created_at']
         self.updated_at = data['updated_at']
+        self.pools = []
 
     # Save New User
     @classmethod
@@ -43,6 +47,34 @@ class User:
         if len(result) < 1:
             return False
         return cls(result[0])
+
+    # Get current user with all pools
+    @classmethod
+    def user_with_all_pools(cls, data):
+        query = "SELECT * FROM users LEFT JOIN pools ON users.id = pools.user_id WHERE users.id = %(id)s;"
+        results = results = connectToMySQL(cls.database_schema_name).query_db(query, data)
+        print(results)
+        if len(results) == 0:
+            return None
+        else:
+            this_user = cls(results[0])
+            for row_in_db in results:
+                pool_data = {
+                    'id': row_in_db['pools.id'],
+                    'name': row_in_db['name'],
+                    'street_address': row_in_db['street_address'],
+                    'city': row_in_db['city'],
+                    'state': row_in_db['state'],
+                    'zipcode': row_in_db['zipcode'],
+                    'water_volume': row_in_db['water_volume'],
+                    'indoor_outdoor': row_in_db['indoor_outdoor'],
+                    'sanitizer': row_in_db['sanitizer'],
+                    'created_at': row_in_db['pools.created_at'],
+                    'updated_at': row_in_db['pools.updated_at'],
+                    'user_id': row_in_db['user_id']
+                }
+                this_user.pools.append(pool.Pool(pool_data))
+            return this_user
 
     @staticmethod
     def validate_user_registration(form_data):

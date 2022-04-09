@@ -1,6 +1,6 @@
 from flask_app import app
 from flask import render_template, redirect, session, request, flash
-from flask_app.models import user, pool
+from flask_app.models import user, pool, reading
 
 @app.route('/pool/add')
 def add_pool_page():
@@ -67,9 +67,9 @@ def add_pool_page():
 
 @app.route('/add-pool-db', methods=['POST'])
 def add_pool_db():
-    # if not pool.Pool.validate_pool_registration(request.form):
-    #     return redirect ('/')
-    # else:
+    if not pool.Pool.validate_pool(request.form):
+        return redirect ('/pool/add')
+    else:
         data = {
             'name': request.form['name'],
             'street_address': request.form['street_address'],
@@ -84,3 +84,12 @@ def add_pool_db():
         pool.Pool.save_pool(data)
         return redirect('/dashboard')
 
+# Show 1 pool with readings
+@app.route('/pool/<int:id>')
+def show_pool(id):
+    if 'user_id' not in session:
+        return redirect('/')
+    data = {
+        "id": id
+    }
+    return render_template("show_pool.html", this_pool=pool.Pool.get_one_pool_with_all_readings(data))

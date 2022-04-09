@@ -2,7 +2,7 @@ from flask_app import app
 from flask import render_template, redirect, session, request, flash
 from flask_bcrypt import Bcrypt
 bcrypt = Bcrypt(app)
-from flask_app.models import user
+from flask_app.models import user, pool
 
 @app.route('/')
 def survey():
@@ -48,10 +48,13 @@ def login():
 
 @app.route('/dashboard')
 def dashboard():
-    if 'user_id'in session:
-        return render_template('dashboard.html')
-    else:
+    if 'user_id' not in session:
         return redirect('/')
+    else:
+        data = {
+            "id": session['user_id']
+        }    
+        return render_template('dashboard.html', this_user = user.User.user_with_all_pools(data))
 
 @app.route('/logout')
 def logout():

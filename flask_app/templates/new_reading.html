@@ -1,0 +1,133 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="Mark Otto, Jacob Thornton, and Bootstrap contributors">
+    <meta name="generator" content="Hugo 0.88.1">
+    <title>Dashboard</title>
+
+    <link rel="canonical" href="https://getbootstrap.com/docs/5.1/examples/heroes/">
+
+    
+
+    <!-- Bootstrap core CSS -->
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='/css/bootstrap.css') }}">
+
+    <style>
+      .bd-placeholder-img {
+        font-size: 1.125rem;
+        text-anchor: middle;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        user-select: none;
+      }
+
+      @media (min-width: 768px) {
+        .bd-placeholder-img-lg {
+          font-size: 3.5rem;
+        }
+      }
+
+      input[type=number]::-webkit-inner-spin-button, 
+      input[type=number]::-webkit-outer-spin-button { 
+        -webkit-appearance: none; 
+        margin: 0; 
+      }
+    </style>
+
+    
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='/css/headers.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='/css/heroes.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='/css/style.css') }}">
+  </head>
+  <body>
+    
+<main>
+  <div class="container">
+    <header class="d-flex flex-wrap justify-content-center py-3 mb-4 border-bottom">
+      <a href="/" class="d-flex align-items-center mb-3 mb-md-0 me-md-auto text-dark text-decoration-none">
+        <img class="logo" src="{{ url_for('static', filename='/images/poollog-logo.png') }}">
+        <span class="fs-4">My Pool Log</span>
+      </a>
+
+      <ul class="nav nav-pills align-items-center">
+        <li class="nav-item"><a href="/logout" class="btn btn-primary btn-sm px-4 gap-3">Logout</a></li>
+        <!-- <li class="nav-item"><a href="/results" class="nav-link">Survey Results</a></li> -->
+      </ul>
+    </header>
+    <h1 class="display-4 fw-bold lh-1 mb-3">Add Reading - {{one_pool.name}}</h1>
+    <div class="container col-xl-10 col-xxl-8 px-4 py-5">
+      <div class="row align-items-center g-lg-5 py-5">
+        <div class="col-lg-7 text-center text-lg-start">
+        <!-- <p class="col-lg-10 fs-4 text-muted">If you haven't been here before please register below.</p> -->
+        {% with messages = get_flashed_messages() %}     <!-- declare a variable called messages -->
+        {% if messages %}                            <!-- check if there are any messages -->
+            {% for message in messages %}            <!-- loop through the messages -->
+                <p>{{message}}</p>                   <!-- display each message in a paragraph tag -->
+            {% endfor %}
+        {% endif %}
+      {% endwith %}
+      <!-- Start of Simple Reading Form -->
+      <h3>Add simple reading</h3>
+      <form class="p-4 p-md-5 border rounded-3 bg-light" action="/pool/{{one_pool.id}}/readings/add_to_db" method="POST">
+        <!-- Free Chlorine Feild -->
+        <div class="form-floating mb-3">
+          <input type="number" step="any" class="form-control" id="floatingFreeChlorine"  placeholder="Free Chlorine" name="free_chlorine"> 
+          <label for="floatingFreeChlorine">Free Chlorine</label>
+        </div>
+        <!-- pH Field -->
+        <div class="form-floating mb-3">
+          <input type="number" step="any" class="form-control" id="floatingPH"  placeholder="pH" name="pH"> 
+          <label for="floatingPH">pH</label>
+        </div>
+        <!-- Temperature Field-->
+          <div class="form-floating mb-3">
+            <input type="number" step="any" class="form-control" id="floatingTemperature"  placeholder="Temperature" name="temperature"> 
+            <label for="floatingTemperature">Temperature</label>
+          </div>
+        <input type="hidden" name="user_id" value="{{session['user_id']}}">
+        <hr class="my-4">
+        <input class="w-100 btn btn-lg btn-primary" type="submit" value="Add Simple Reading">
+      </form>
+        </div>
+        <div class="col-md-10 mx-auto col-lg-5">
+          <form class="p-4 p-md-5 border rounded-3 bg-light">
+            <div class="form-floating mb-3">
+              <input type="email" class="form-control" id="floatingInput" placeholder="name@example.com">
+              <label for="floatingInput">Email address</label>
+            </div>
+            <div class="form-floating mb-3">
+              <input type="password" class="form-control" id="floatingPassword" placeholder="Password">
+              <label for="floatingPassword">Password</label>
+            </div>
+            <div class="checkbox mb-3">
+              <label>
+                <input type="checkbox" value="remember-me"> Remember me
+              </label>
+            </div>
+            <button class="w-100 btn btn-lg btn-primary" type="submit">Sign up</button>
+            <hr class="my-4">
+            <small class="text-muted">By clicking Sign up, you agree to the terms of use.</small>
+          </form>
+        </div>
+      </div>
+    </div>
+  <div class="container m-auto">
+    <div class="px-4 py-5 my-5 text-center">
+        <div class="text-center text-lg-start">
+          
+          
+        </div>
+  </div>
+  </div>
+  </div>
+</main>
+
+
+    <script type="text/javascript" src="{{ url_for('static', filename='/js/bootstrap.js') }}"></script> 
+
+      
+  </body>
+</html>

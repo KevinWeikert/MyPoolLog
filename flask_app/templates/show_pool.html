@@ -53,37 +53,40 @@
     </header>
 
   <div class="px-4 py-5 my-5 text-center">
-    <h1 class="display-5 fw-bold">Welcome {{session['first_name']}}!</h1>
-    <div class="col-lg-6 mx-auto">
-      <p class="lead mb-4">Thank you for creating an account with us. Here is your dashboard.</p>
-      <div class="d-grid gap-2 d-sm-flex justify-content-sm-center">
-        <table class="table table-hover">
-          <thead class="table-primary">
-            <th>Pool Name</th>
-            <th>Water Volume</th>
-            <th>Sanitizer</th>
-            <th>Indoor or Outdoor</th>
-            <th></th>
-        </thead>
-        <tbody>
-          {%if all_pools == None%}
-            <p>Add a Pool</p>
-          {%else%}
-          {% for one_pool in this_user.pools %}
-            <tr>
-              <td>{{one_pool.name}}</td>
-              <td>{{one_pool.water_volume}}</td>
-              <td>{{one_pool.sanitizer}}</td>
-              <td>{%if one_pool.indoor_outdoor == 0%}
-                    <p>Indoor</p>
-                  {%else%}
-                    <p>Outdoor</p>
-                  {%endif%}</td>
-              <td>
-                  <a class="btn-sm btn-outline-secondary" href="/pool/{{one_pool.id}}">View Pool</a> 
-            </tr>
-          {%endfor%}
-          {%endif%}
+    <h1 class="display-5 fw-bold">{{this_pool.name}}!</h1>
+    <div class="col-lg-10 mx-auto">
+      <p class="lead mb-4">Let's check out your pool.</p>
+      <div class="card p-3 d-grid gap-2 d-sm-flex text-start justify-content-sm-start">
+        <nav>
+          <div class="nav nav-tabs" id="nav-tab" role="tablist">
+            <button class="nav-link active" id="nav-detail-tab" data-bs-toggle="tab" data-bs-target="#nav-details" type="button" role="tab" aria-controls="nav-details" aria-selected="true">Pool Details</button>
+            <button class="nav-link" id="nav-readings-tab" data-bs-toggle="tab" data-bs-target="#nav-readings" type="button" role="tab" aria-controls="nav-readings" aria-selected="false">Readings</button>
+          </div>
+        </nav>
+        <div class="tab-content" id="nav-tabContent">
+          <div class="tab-pane fade show active" id="nav-details" role="tabpanel" aria-labelledby="nav-details-tab">
+            {{this_pool.name}}
+          </div>
+          <div class="tab-pane fade" id="nav-readings" role="tabpanel" aria-labelledby="nav-readings-tab">
+            <table class="table table-hover">
+              <thead class="table-primary">
+                <th>Free Chlorine</th>
+                <th>pH</th>
+                <th>Temperature</th>
+                <th>Entry Date/Time</th>
+            </thead>
+            <tbody>
+              {% for one_reading in this_pool.readings %}
+                <tr>
+                  <td>{{one_reading.free_chlorine}}</td>
+                  <td>{{one_reading.pH}}</td>
+                  <td>{{one_reading.temperature}}</td>
+                  <td>{{one_reading.created_at}}</td>
+                </tr>
+              {%endfor%}
+          </div>
+
+        </div>
         <!-- <button type="button" class="btn btn-outline-secondary btn-lg px-4">Secondary</button> -->
       </div>
     </div>

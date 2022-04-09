@@ -29,6 +29,12 @@
           font-size: 3.5rem;
         }
       }
+
+      input[type=number]::-webkit-inner-spin-button, 
+      input[type=number]::-webkit-outer-spin-button { 
+        -webkit-appearance: none; 
+        margin: 0; 
+      }
     </style>
 
     
@@ -51,86 +57,101 @@
         <!-- <li class="nav-item"><a href="/results" class="nav-link">Survey Results</a></li> -->
       </ul>
     </header>
-
-  <div class="px-4 py-5 my-5 text-center">
-    <h1 class="display-5 fw-bold">Welcome {{session['first_name']}}!</h1>
-    <div class="col-lg-6 mx-auto">
-      <p class="lead mb-4">Thank you for creating an account with us. Here is your dashboard.</p>
-      <div class="text-center text-lg-start">
-        <h1 class="display-4 fw-bold lh-1 mb-3">Add Pool</h1>
-        <!-- <p class="col-lg-10 fs-4 text-muted">If you haven't been here before please register below.</p> -->
-        {% with messages = get_flashed_messages() %}     <!-- declare a variable called messages -->
-        {% if messages %}                            <!-- check if there are any messages -->
-            {% for message in messages %}            <!-- loop through the messages -->
-                <p>{{message}}</p>                   <!-- display each message in a paragraph tag -->
-            {% endfor %}
-        {% endif %}
-      {% endwith %}
-      <!-- Start of Survey -->
-      <form class="p-4 p-md-5 border rounded-3 bg-light" action="/add-pool-db" method="POST">
-        <!-- Pool Name Field -->
-        <div class="form-floating mb-3">
-          <input type="text" class="form-control" id="floatingName"  placeholder="Pool Name" name="name"> 
-          <label for="floatingName">Pool Name</label>
+  <div class="container m-auto">
+    <div class="px-4 py-5 my-5 text-center">
+        <div class="text-center text-lg-start">
+          <h1 class="display-4 fw-bold lh-1 mb-3">Add Pool</h1>
+          <!-- <p class="col-lg-10 fs-4 text-muted">If you haven't been here before please register below.</p> -->
+          {% with messages = get_flashed_messages() %}     <!-- declare a variable called messages -->
+          {% if messages %}                            <!-- check if there are any messages -->
+              {% for message in messages %}            <!-- loop through the messages -->
+                  <p>{{message}}</p>                   <!-- display each message in a paragraph tag -->
+              {% endfor %}
+          {% endif %}
+        {% endwith %}
+        <!-- Start of Survey -->
+        <form class="p-4 p-md-5 border rounded-3 bg-light" action="/add-pool-db" method="POST">
+          <!-- Pool Name Field -->
+          <div class="form-floating mb-3">
+            <input type="text" class="form-control" id="floatingName"  placeholder="Pool Name" name="name"> 
+            <label for="floatingName">Pool Name</label>
+          </div>
+          <!-- Address Field -->
+          <div class="form-floating mb-3">
+            <input type="text" class="form-control" id="floatingAddress"  placeholder="Address" name="street_address"> 
+            <label for="floatingAddress">Address</label>
+          </div>
+          <div class="row ">
+            <!-- City -->
+            <div class="col">
+              <div class="form-floating mb-3">
+                <input type="text" class="form-control" id="floatingCity"  placeholder="City" name="city"> 
+                <label for="floatingCity">City</label>
+              </div>
+            </div>
+            <!-- State -->
+            <div class="col">
+              <div class="form-floating mb-3">
+                <select class="form-select" name="state" id="floatingState" aria-label="Select State" aria-placeholder="Select State">
+                  <option value="No State Selected">Select a State</option>
+                  {%for key, value in states.items()%}
+                  <option value="{{key}}">{{value}}</option>
+                  {%endfor%}
+                </select>
+                <label for="floatingState">State</label>
+              </div>
+            </div>
+            <!-- Zipcode -->
+            <div class="col">
+              <div class=" form-floating mb-3">
+                <input type="number" class="form-control" id="floatingZipcode"  placeholder="Zipcode" name="zipcode"> 
+                <label for="floatingZipcode">Zipcode</label>
+              </div>
+            </div>
+            </div>
+            <h3>Pool Details</h3>
+            <div class="row">
+              <!-- Water Volume -->
+              <div class="col">
+                <div class="form-floating mb-3">
+                  <input type="number" class="form-control" id="floatingWaterVolume"  placeholder="65000" name="water_volume"> 
+                  <label for="floatingwater_volume">Water Volume in Gallons</label>
+                </div>
+              </div>
+              <!-- Indoor or Outdoor -->
+              <div class="col">
+                <div class="form-floating mb-3">
+                  Is your pool indoor or outdoor?
+                </div>
+                <div class="form-check form-check-inline">
+                  <input class="form-check-input" type="radio" name="indoor_outdoor" id="indoor" value="0" checked>
+                  <label class="form-check-label" for="indoor">Indoor</label>
+                </div>
+                <div class="form-check form-check-inline">
+                  <input class="form-check-input" type="radio" name="indoor_outdoor" id="Outdoor" value="1">
+                  <label class="form-check-label" for="Outdoor">Outdoor</label>
+                </div>
+              </div>
+              <!-- Sanitizer -->
+              <div class="col">
+                <div class="form-floating mb-3 mt-3">
+                  <select class="form-select" id="floatingSanitizer" name="sanitizer" aria-label="Select Sanitizer">
+                    <option>Select a Sanitizer</option>
+                    {%for key, value in sanitizers.items()%}
+                    <option value="{{key}}">{{value}}</option>
+                    {%endfor%}
+                  </select>
+                  <label for="floatingSanitizer">Sanitizer</label>
+                </div>
+              </div>
+            </div>
+          <input type="hidden" name="user_id" value="{{session['user_id']}}">
+          <hr class="my-4">
+          <input class="w-100 btn btn-lg btn-primary" type="submit" value="Add Pool">
+        </form>
         </div>
-        <!-- Address Field -->
-        <div class="form-floating mb-3">
-          <input type="text" class="form-control" id="floatingAddress"  placeholder="Address" name="street_address"> 
-          <label for="floatingAddress">Address</label>
-        </div>
-        <!-- City -->
-        <div class="form-floating mb-3">
-          <input type="text" class="form-control" id="floatingCity"  placeholder="City" name="city"> 
-          <label for="floatingCity">City</label>
-        </div>
-        <!-- State -->
-        <div class="form-floating mb-3">
-          <select class="form-select" name="state" id="floatingState" aria-label="Select State">
-            {%for key, value in states.items()%}
-            <option value="{{key}}">{{value}}</option>
-            {%endfor%}
-          </select>
-          <label for="floatingState">State</label>
-        </div>
-        <!-- Zipcode -->
-        <div class="form-floating mb-3">
-          <input type="text" class="form-control" id="floatingZipcode"  placeholder="Zipcode" name="zipcode"> 
-          <label for="floatingZipcode">Zipcode</label>
-        </div>
-        <!-- Water Volume -->
-        <div class="form-floating mb-3">
-          <input type="number" class="form-control" id="floatingWaterVolume"  placeholder="65000" name="water_volume"> 
-          <label for="floatingwater_volume">Water Volume in Gallons</label>
-        </div>
-
-        <!-- Indoor or Outdoor -->
-        <div class="form-floating mb-3">
-          Is your pool indoor or outdoor?
-        </div>
-        <div class="form-check form-check-inline">
-          <input class="form-check-input" type="radio" name="indoor_outdoor" id="indoor" value="0">
-          <label class="form-check-label" for="indoor">Indoor</label>
-        </div>
-        <div class="form-check form-check-inline">
-          <input class="form-check-input" type="radio" name="indoor_outdoor" id="Outdoor" value="1">
-          <label class="form-check-label" for="Outdoor">Outdoor</label>
-        </div>
-        <!-- Sanitizer -->
-        <div class="form-floating mb-3 mt-3">
-          <select class="form-select" id="floatingSanitizer" name="sanitizer" aria-label="Select Sanitizer">
-            <option>Select a Sanitizer</option>
-            {%for key, value in sanitizers.items()%}
-            <option value="{{key}}">{{value}}</option>
-            {%endfor%}
-          </select>
-          <label for="floatingSanitizer">Sanitizer</label>
-        </div>
-        <input type="hidden" name="user_id" value="{{session['user_id']}}">
-        <hr class="my-4">
-        <input class="w-100 btn btn-lg btn-primary" type="submit" value="Add Pool">
-      </form>
-      </div>
-    </div>
+  </div>
+  </div>
   </div>
 </main>
 
