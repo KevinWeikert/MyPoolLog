@@ -39,55 +39,128 @@
   <body>
     
 <main>
-  <div class="container">
-    <header class="d-flex flex-wrap justify-content-center py-3 mb-4 border-bottom">
-      <a href="/" class="d-flex align-items-center mb-3 mb-md-0 me-md-auto text-dark text-decoration-none">
+  <nav class="navbar navbar-light bg-white fixed-top">
+    <div class="container-fluid">
+      <a href="/dashboard" class="d-flex align-items-center mb-3 mb-md-0 me-md-auto text-dark text-decoration-none">
         <img class="logo" src="{{ url_for('static', filename='/images/poollog-logo.png') }}">
         <span class="fs-4">My Pool Log</span>
       </a>
-
-      <ul class="nav nav-pills align-items-center">
-        <li class="nav-item"><a href="/pool/add" class="btn btn-primary btn-sm px-4 gap-3">Add Pool</a></li>
-        <li class="nav-item"><a href="/logout" class="nav-link">Logout</a></li>
-      </ul>
-    </header>
+      <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbar" aria-controls="offcanvasNavbar">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasNavbar" aria-labelledby="offcanvasNavbarLabel">
+        <div class="offcanvas-header">
+          <a href="/dashboard" class="d-flex align-items-center mb-3 mb-md-0 me-md-auto text-dark text-decoration-none">
+            <img class="logo" src="{{ url_for('static', filename='/images/poollog-logo.png') }}">
+            <span class="fs-4">My Pool Log</span>
+          </a>
+          <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+        </div>
+        <div class="offcanvas-body">
+          <h5 class="offcanvas-title" id="offcanvasNavbarLabel">Welcome {{session['first_name']}}!</h5>
+          <ul class="navbar-nav justify-content-end flex-grow-1 pe-3">
+            <li class="nav-item">
+              <a class="nav-link active" aria-current="page" href="/dashboard">Dashboard</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="/pool/add">Add Pool</a>
+            </li>
+            <!-- <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="#" id="offcanvasNavbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                Pools
+              </a>
+              <ul class="dropdown-menu" aria-labelledby="offcanvasNavbarDropdown">
+                <li><a class="dropdown-item" href="#">Action</a></li>
+                <li><a class="dropdown-item" href="#">Another action</a></li>
+                <li>
+                  <hr class="dropdown-divider">
+                </li>
+                <li><a class="dropdown-item" href="#">Something else here</a></li>
+              </ul>
+            </li> -->
+            <li class="nav-item">
+              <a class="nav-link" href="#">My Account</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link btn btn-primary text-white" href="/logout">Logout</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </nav>
+  <div class="container">
 
   <div class="px-4 py-5 my-5 text-center">
-    <h1 class="display-5 fw-bold">{{this_pool.name}}!</h1>
+    <h1 class="display-5 fw-bold">{{this_pool.name}}</h1>
     <div class="col-lg-10 mx-auto">
       <p class="lead mb-4">Let's check out your pool.</p>
       <div class="card p-3 d-grid gap-2 d-sm-flex text-start justify-content-sm-start">
-        <nav>
+        <nav class="pool-nav">
           <div class="nav nav-tabs" id="nav-tab" role="tablist">
-            <button class="nav-link active" id="nav-detail-tab" data-bs-toggle="tab" data-bs-target="#nav-details" type="button" role="tab" aria-controls="nav-details" aria-selected="true">Pool Details</button>
-            <button class="nav-link" id="nav-readings-tab" data-bs-toggle="tab" data-bs-target="#nav-readings" type="button" role="tab" aria-controls="nav-readings" aria-selected="false">Readings</button>
+            <button class="nav-link active" id="nav-readings-tab" data-bs-toggle="tab" data-bs-target="#nav-readings" type="button" role="tab" aria-controls="nav-readings" aria-selected="false">Readings</button>
+            <button class="nav-link" id="nav-detail-tab" data-bs-toggle="tab" data-bs-target="#nav-details" type="button" role="tab" aria-controls="nav-details" aria-selected="true">Pool Details</button>
           </div>
+          <a class=" btn btn-primary mb-3" href="/pool/{{this_pool.id}}/readings/add">Add Reading</a>
         </nav>
         <div class="tab-content" id="nav-tabContent">
-          <div class="tab-pane fade show active" id="nav-details" role="tabpanel" aria-labelledby="nav-details-tab">
-            {{this_pool.name}}
+          <div class="tab-pane fade show active" id="nav-readings" role="tabpanel" aria-labelledby="nav-readings-tab">
+            <div class="table-responsive">
+              <table class="table table-hover text-center align-middle table-striped">
+                <thead class="table-dark">
+                  <th>Free Chlorine</th>
+                  <th>Combined Chlorine</th>
+                  <th>pH</th>
+                  <th>Temperature</th>
+                  <th>Calcium Hardness</th>
+                  <th>Total Alkality</th>
+                  <th>TDS</th>
+                  <th>Saturation Index</th>
+                  <th>Entry Date/Time</th>
+                </thead>
+                <tbody>
+                  {% for one_reading in this_pool.readings %}
+                    <tr>
+                      <td>{{one_reading.free_chlorine}}</td>
+                      <td>{{one_reading.total_chlorine}}</td>
+                      <td>{{one_reading.pH}}</td>
+                      <td>{{one_reading.temperature}}℉</td>
+                      <td>{{one_reading.calcium}}</td>
+                      <td>{{one_reading.alkalinity}}</td>
+                      <td>{{one_reading.TDS}}</td>
+                      <td>{{one_reading.saturation_index}}</td>
+                      <td>{{one_reading.created_at}}</td>
+                    </tr>
+                  {%endfor%}
+                </tbody>
+              </table>
+            </div>
           </div>
-          <div class="tab-pane fade" id="nav-readings" role="tabpanel" aria-labelledby="nav-readings-tab">
-            <table class="table table-hover">
-              <thead class="table-primary">
-                <th>Free Chlorine</th>
-                <th>pH</th>
-                <th>Temperature</th>
-                <th>Entry Date/Time</th>
-            </thead>
-            <tbody>
-              {% for one_reading in this_pool.readings %}
-                <tr>
-                  <td>{{one_reading.free_chlorine}}</td>
-                  <td>{{one_reading.pH}}</td>
-                  <td>{{one_reading.temperature}}</td>
-                  <td>{{one_reading.created_at}}</td>
-                </tr>
-              {%endfor%}
+          <div class="tab-pane fade" id="nav-details" role="tabpanel" aria-labelledby="nav-details-tab">
+            <table class="table text-center align-middle">
+              <thead class="table-dark">
+                <th>Name</th>
+                <th>Address</th>
+                <th>Water Volume</th>
+                <th>Indoor or Outdoor?</th>
+              </thead>
+              <tbody>
+                  <tr>
+                    <td>{{this_pool.name}}</td>
+                    <td>{{this_pool.street_address}}<br>
+                      {{this_pool.city}}, {{this_pool.state}} {{this_pool.zipcode}}
+                    </td>
+                    <td>{{this_pool.water_volume}}</td>
+                    <td>{%if this_pool.indoor_outdoor == 0%}
+                      <p>Indoor</p>
+                    {%else%}
+                      <p>Outdoor</p>
+                    {%endif%}</td>
+                  </tr>
+              </tbody>
+            </table>
           </div>
-
         </div>
-        <!-- <button type="button" class="btn btn-outline-secondary btn-lg px-4">Secondary</button> -->
       </div>
     </div>
   </div>

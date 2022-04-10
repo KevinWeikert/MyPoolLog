@@ -2,3 +2,15 @@
     width: 50px;
 }
 
+.navbar-toggler-icon{
+    color: #0d6efd !important;
+}
+
+nav{
+    border-bottom: lightgray 1pt solid;
+}
+
+.pool-nav{
+    display: flex;
+    justify-content: space-between;
+}

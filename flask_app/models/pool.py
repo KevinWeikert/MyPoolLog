@@ -39,7 +39,7 @@ class Pool:
     # Get on Pool with all readings
     @classmethod
     def get_one_pool_with_all_readings(cls, data):
-        query= "SELECT * FROM pools LEFT JOIN readings ON pools.id = readings.pool_id WHERE pools.id = %(id)s;"
+        query= "SELECT * FROM pools LEFT JOIN readings ON pools.id = readings.pool_id WHERE pools.id = %(id)s ORDER BY readings.created_at DESC LIMIT 10;"
         results = connectToMySQL(cls.database_schema_name).query_db(query, data)
         if len(results) == 0:
             return None

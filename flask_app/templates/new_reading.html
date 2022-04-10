@@ -45,72 +45,157 @@
   <body>
     
 <main>
-  <div class="container">
-    <header class="d-flex flex-wrap justify-content-center py-3 mb-4 border-bottom">
-      <a href="/" class="d-flex align-items-center mb-3 mb-md-0 me-md-auto text-dark text-decoration-none">
+  <nav class="navbar navbar-light bg-white fixed-top">
+    <div class="container-fluid">
+      <a href="/dashboard" class="d-flex align-items-center mb-3 mb-md-0 me-md-auto text-dark text-decoration-none">
         <img class="logo" src="{{ url_for('static', filename='/images/poollog-logo.png') }}">
         <span class="fs-4">My Pool Log</span>
       </a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbar" aria-controls="offcanvasNavbar">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasNavbar" aria-labelledby="offcanvasNavbarLabel">
+        <div class="offcanvas-header">
+          <a href="/dashboard" class="d-flex align-items-center mb-3 mb-md-0 me-md-auto text-dark text-decoration-none">
+            <img class="logo" src="{{ url_for('static', filename='/images/poollog-logo.png') }}">
+            <span class="fs-4">My Pool Log</span>
+          </a>
+          <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+        </div>
+        <div class="offcanvas-body">
+          <h5 class="offcanvas-title" id="offcanvasNavbarLabel">Welcome {{session['first_name']}}!</h5>
+          <ul class="navbar-nav justify-content-end flex-grow-1 pe-3">
+            <li class="nav-item">
+              <a class="nav-link active" aria-current="page" href="/dashboard">Dashboard</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="/pool/add">Add Pool</a>
+            </li>
+            <!-- <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="#" id="offcanvasNavbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                Pools
+              </a>
+              <ul class="dropdown-menu" aria-labelledby="offcanvasNavbarDropdown">
+                <li><a class="dropdown-item" href="#">Action</a></li>
+                <li><a class="dropdown-item" href="#">Another action</a></li>
+                <li>
+                  <hr class="dropdown-divider">
+                </li>
+                <li><a class="dropdown-item" href="#">Something else here</a></li>
+              </ul>
+            </li> -->
+            <li class="nav-item">
+              <a class="nav-link" href="#">My Account</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link btn btn-primary text-white" href="/logout">Logout</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </nav>
 
-      <ul class="nav nav-pills align-items-center">
-        <li class="nav-item"><a href="/logout" class="btn btn-primary btn-sm px-4 gap-3">Logout</a></li>
-        <!-- <li class="nav-item"><a href="/results" class="nav-link">Survey Results</a></li> -->
-      </ul>
-    </header>
+  <div class="container px-4 py-5 my-5">
     <h1 class="display-4 fw-bold lh-1 mb-3">Add Reading - {{one_pool.name}}</h1>
     <div class="container col-xl-10 col-xxl-8 px-4 py-5">
       <div class="row align-items-center g-lg-5 py-5">
-        <div class="col-lg-7 text-center text-lg-start">
-        <!-- <p class="col-lg-10 fs-4 text-muted">If you haven't been here before please register below.</p> -->
-        {% with messages = get_flashed_messages() %}     <!-- declare a variable called messages -->
-        {% if messages %}                            <!-- check if there are any messages -->
-            {% for message in messages %}            <!-- loop through the messages -->
-                <p>{{message}}</p>                   <!-- display each message in a paragraph tag -->
-            {% endfor %}
-        {% endif %}
-      {% endwith %}
-      <!-- Start of Simple Reading Form -->
-      <h3>Add simple reading</h3>
-      <form class="p-4 p-md-5 border rounded-3 bg-light" action="/pool/{{one_pool.id}}/readings/add_to_db" method="POST">
-        <!-- Free Chlorine Feild -->
-        <div class="form-floating mb-3">
-          <input type="number" step="any" class="form-control" id="floatingFreeChlorine"  placeholder="Free Chlorine" name="free_chlorine"> 
-          <label for="floatingFreeChlorine">Free Chlorine</label>
-        </div>
-        <!-- pH Field -->
-        <div class="form-floating mb-3">
-          <input type="number" step="any" class="form-control" id="floatingPH"  placeholder="pH" name="pH"> 
-          <label for="floatingPH">pH</label>
-        </div>
-        <!-- Temperature Field-->
-          <div class="form-floating mb-3">
-            <input type="number" step="any" class="form-control" id="floatingTemperature"  placeholder="Temperature" name="temperature"> 
-            <label for="floatingTemperature">Temperature</label>
+        <ul class="nav nav-pills mb-3 justify-content-center" id="pills-tab" role="tablist">
+          <li class="nav-item" role="presentation">
+            <button class="nav-link active" id="pills-simple-reading-tab" data-bs-toggle="pill" data-bs-target="#pills-simple-reading" type="button" role="tab" aria-controls="pills-simple-reading" aria-selected="true">Simple Reading</button>
+          </li>
+          <li class="nav-item" role="presentation">
+            <button class="nav-link" id="pills-advanced-reading-tab" data-bs-toggle="pill" data-bs-target="#pills-advanced-reading" type="button" role="tab" aria-controls="pills-advanced-reading" aria-selected="false">Advanced Reading</button>
+          </li>
+        </ul>
+        <div class="tab-content" id="pills-tabContent">
+          <div class="tab-pane fade show active" id="pills-simple-reading" role="tabpanel" aria-labelledby="pills-simple-reading-tab">
+            <div class="text-center text-lg-start">
+              {% with messages = get_flashed_messages() %}     <!-- declare a variable called messages -->
+                {% if messages %}                            <!-- check if there are any messages -->
+                  {% for message in messages %}            <!-- loop through the messages -->
+                      <p>{{message}}</p>                   <!-- display each message in a paragraph tag -->
+                  {% endfor %}
+                {% endif %}
+              {% endwith %}
+          <!-- Start of Simple Reading Form -->
+              <h3>Add simple reading</h3>
+              <form class="p-4 p-md-5 border rounded-3 bg-light" action="/pool/{{one_pool.id}}/readings/add_simple_to_db" method="POST">
+                <!-- Free Chlorine Feild -->
+                <div class="form-floating mb-3">
+                  <input type="number" step="any" class="form-control" id="floatingFreeChlorine"  placeholder="Free Chlorine" name="free_chlorine"> 
+                  <label for="floatingFreeChlorine">Free Chlorine</label>
+                </div>
+                <!-- pH Field -->
+                <div class="form-floating mb-3">
+                  <input type="number" step="any" class="form-control" id="floatingPH"  placeholder="pH" name="pH"> 
+                  <label for="floatingPH">pH</label>
+                </div>
+                <!-- Temperature Field-->
+                  <div class="form-floating mb-3">
+                    <input type="number" step="any" class="form-control" id="floatingTemperature"  placeholder="Temperature" name="temperature"> 
+                    <label for="floatingTemperature">Temperature</label>
+                  </div>
+                <input type="hidden" name="user_id" value="{{session['user_id']}}">
+                <hr class="my-4">
+                <input class="w-100 btn btn-lg btn-primary" type="submit" value="Add Simple Reading">
+              </form>
+            </div>
           </div>
-        <input type="hidden" name="user_id" value="{{session['user_id']}}">
-        <hr class="my-4">
-        <input class="w-100 btn btn-lg btn-primary" type="submit" value="Add Simple Reading">
-      </form>
+          <div class="tab-pane fade" id="pills-advanced-reading" role="tabpanel" aria-labelledby="pills-advanced-reading-tab">
+            <div class="text-center text-lg-start">
+              {% with messages = get_flashed_messages() %}     <!-- declare a variable called messages -->
+                {% if messages %}                            <!-- check if there are any messages -->
+                  {% for message in messages %}            <!-- loop through the messages -->
+                      <p>{{message}}</p>                   <!-- display each message in a paragraph tag -->
+                  {% endfor %}
+                {% endif %}
+              {% endwith %}
+          <!-- Start of Advanced Reading Form -->
+              <h3>Add advanced reading</h3>
+              <form class="p-4 p-md-5 border rounded-3 bg-light" action="/pool/{{one_pool.id}}/readings/add_advanced_to_db" method="POST">
+                <!-- Free Chlorine Feild -->
+                <div class="form-floating mb-3">
+                  <input type="number" step="any" class="form-control" id="floatingFreeChlorine"  placeholder="Free Chlorine" name="free_chlorine"> 
+                  <label for="floatingFreeChlorine">Free Chlorine</label>
+                </div>
+                <!-- Total Chlorine Field-->
+                  <div class="form-floating mb-3">
+                    <input type="number" step="any" class="form-control" id="floatingtotal_chlorine"  placeholder="total_chlorine" name="total_chlorine"> 
+                    <label for="floatingtotal_chlorine">Total Chlorine</label>
+                  </div>
+                <!-- pH Field -->
+                <div class="form-floating mb-3">
+                  <input type="number" step="any" class="form-control" id="floatingPH"  placeholder="pH" name="pH"> 
+                  <label for="floatingPH">pH</label>
+                </div>
+                <!-- Temperature Field-->
+                  <div class="form-floating mb-3">
+                    <input type="number" step="any" class="form-control" id="floatingTemperature"  placeholder="Temperature" name="temperature"> 
+                    <label for="floatingTemperature">Temperature</label>
+                  </div>
+                <!-- Calcium Field-->
+                  <div class="form-floating mb-3">
+                    <input type="number" step="any" class="form-control" id="floatingcalcium"  placeholder="calcium" name="calcium"> 
+                    <label for="floatingcalcium">Calcium</label>
+                  </div>
+                <!-- Alkalinity Field-->
+                <div class="form-floating mb-3">
+                  <input type="number" step="any" class="form-control" id="floatingalkalinity"  placeholder="alkalinity" name="alkalinity"> 
+                  <label for="floatingalkalinity">Alkalinity</label>
+                </div>
+                <!-- TDS Field-->
+                <div class="form-floating mb-3">
+                  <input type="number" step="any" class="form-control" id="floatingTDS"  placeholder="Total Dissolved Solids" name="TDS"> 
+                  <label for="floatingTDS">TDS</label>
+                </div>
+                <input type="hidden" name="user_id" value="{{session['user_id']}}">
+                <hr class="my-4">
+                <input class="w-100 btn btn-lg btn-primary" type="submit" value="Add Advanced Reading">
+              </form>
+            </div>
+          </div>
         </div>
-        <div class="col-md-10 mx-auto col-lg-5">
-          <form class="p-4 p-md-5 border rounded-3 bg-light">
-            <div class="form-floating mb-3">
-              <input type="email" class="form-control" id="floatingInput" placeholder="name@example.com">
-              <label for="floatingInput">Email address</label>
-            </div>
-            <div class="form-floating mb-3">
-              <input type="password" class="form-control" id="floatingPassword" placeholder="Password">
-              <label for="floatingPassword">Password</label>
-            </div>
-            <div class="checkbox mb-3">
-              <label>
-                <input type="checkbox" value="remember-me"> Remember me
-              </label>
-            </div>
-            <button class="w-100 btn btn-lg btn-primary" type="submit">Sign up</button>
-            <hr class="my-4">
-            <small class="text-muted">By clicking Sign up, you agree to the terms of use.</small>
-          </form>
         </div>
       </div>
     </div>

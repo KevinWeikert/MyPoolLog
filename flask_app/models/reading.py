@@ -14,7 +14,6 @@ class Reading:
         self.total_chlorine = data['total_chlorine']
         self.calcium = data['calcium']
         self.alkalinity = data['alkalinity']
-        self.water_volume = data['water_volume']
         self.combined_chlorine = data['combined_chlorine']
         self.TDS = data['TDS']
         self.saturation_index = data['saturation_index']
@@ -24,10 +23,16 @@ class Reading:
         self.pool_id = data['pool_id']
         self.pool = None
     
-    # Add Reading to Database
+    # Add Simple Reading to Database
     @classmethod
     def add_simple_reading(cls, data):
         query = "INSERT INTO readings (free_chlorine, pH, temperature, user_id, pool_id) VALUES (%(free_chlorine)s, %(pH)s, %(temperature)s, %(user_id)s, %(id)s);"
+        return connectToMySQL(cls.database_schema_name).query_db(query, data)
+
+    #Add Advanced Reading to Database
+    @classmethod
+    def add_advanced_reading(cls, data):
+        query = "INSERT INTO readings (free_chlorine, total_chlorine, combined_chlorine, pH, temperature, calcium, alkalinity, TDS, saturation_index, user_id, pool_id) VALUES (%(free_chlorine)s, %(total_chlorine)s, %(combined_chlorine)s, %(pH)s, %(temperature)s,%(calcium)s, %(alkalinity)s, %(TDS)s, %(saturation_index)s, %(user_id)s, %(id)s);"
         return connectToMySQL(cls.database_schema_name).query_db(query, data)
 
 
