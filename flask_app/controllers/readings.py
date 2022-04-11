@@ -11,12 +11,12 @@ def add_readings_page(id):
         'id': id,
         'user_id': session['user_id']
     }
-    return render_template('new_reading.html', one_pool = pool.Pool.get_one_pool(data))
+    return render_template('new_reading.html', one_pool = pool.Pool.get_one_pool(data), this_user = user.User.user_with_all_pools(data))
 
 @app.route('/pool/<int:id>/readings/add_simple_to_db', methods=['POST'])
 def add_simple_reading_db(id):
-    if 'user_id' not in session:
-        return redirect('/')
+    if not reading.Reading.validate_simple_reading(request.form):
+        return redirect (f"/pool/{id}/readings/add")
     data={
         'id': id,
         'user_id': session['user_id'],
@@ -29,8 +29,8 @@ def add_simple_reading_db(id):
 
 @app.route('/pool/<int:id>/readings/add_advanced_to_db', methods=['POST'])
 def add_advanced_reading_db(id):
-    if 'user_id' not in session:
-        return redirect('/')
+    if not reading.Reading.validate_advanced_reading(request.form):
+        return redirect (f"/pool/{id}/readings/add")
     # Calculate Combined Chlorine
     combined_chlorine = Decimal(request.form['total_chlorine']) - Decimal(request.form['free_chlorine'])
     # Temperature Factor Dictionary
@@ -97,10 +97,6 @@ def add_advanced_reading_db(id):
         TDSf = 12.1
     else:
         TDSf = 12.2
-    print(Tf)
-    print(Cf)
-    print(Af)
-    print(TDSf)
     # Calculation Saturation Index
     SI = Decimal(request.form['pH'])+Decimal(Tf)+Decimal(Cf)+Decimal(Af)-Decimal(TDSf)
     rounded_SI = round(SI,1)

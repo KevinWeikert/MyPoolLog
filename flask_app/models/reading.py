@@ -1,6 +1,8 @@
+from unicodedata import category
 from flask_app.config.mysqlconnection import connectToMySQL
 from flask_app import app
 from flask import flash
+from decimal import Decimal
 from flask_app.models import user, pool
 
 class Reading:
@@ -37,3 +39,52 @@ class Reading:
 
 
 # Add readings validations
+    @staticmethod
+    def validate_simple_reading(form_data):
+        is_valid = True
+        # Free Chlorine Must be greater than zero
+        print(form_data)
+        if  form_data['free_chlorine'] == '' or Decimal(form_data['free_chlorine']) < 0:
+            flash("Free chorine must be greater than 0 and not blank", "simple")
+            is_valid = False
+        # pH must be between 0 and 14
+        if form_data['pH']== '' or Decimal(form_data['pH'])< 0 or Decimal(form_data['pH']) > 14:
+            flash("pH must be between 0-14 and not blank", "simple")
+        # Temperature must be between 32 - 105 degrees F
+        if form_data['temperature']== '' or Decimal(form_data['temperature'])< 0 or Decimal(form_data['temperature']) > 14:
+            flash("Temperature must be between 32-105 degrees F and not blank", "simple")
+        return is_valid
+
+    @staticmethod
+    def validate_advanced_reading(form_data):
+        is_valid = True
+        # Free Chlorine Must be greater than zero
+        print(form_data)
+        if  form_data['free_chlorine'] == '' or Decimal(form_data['free_chlorine']) < 0:
+            flash("Free chorine must be greater than 0 and not blank", "advanced")
+            is_valid = False
+        # Total chlorine must be greater than Free Chlorine
+        if form_data['total_chlorine'] == '' or Decimal(form_data['total_chlorine']) < Decimal(form_data['free_chlorine']):
+            flash("Total chlorine must be greater than free chlorine and not blank", "advanced")
+            is_valid = False
+        # pH must be between 0 and 14
+        if form_data['pH']== '' or Decimal(form_data['pH'])< 0 or Decimal(form_data['pH']) > 14:
+            flash("pH must be between 0-14 and not blank", "advanced")
+            is_valid = False
+        # Temperature must be between 32 - 105 degrees F
+        if form_data['temperature']== '' or Decimal(form_data['temperature']) < 0 or Decimal(form_data['temperature']) > 105:
+            flash("Temperature must be between 32-105 degrees F and not blank", "advanced")
+            is_valid = False
+        # Calcium must be greater than 0
+        if form_data['calcium'] == '' or Decimal(form_data['calcium']) < 0:
+            flash("Calcium must be great than zero", "advanced")
+            is_valid = False
+        #Alkalinity must be greater than 0
+        if form_data['alkalinity'] == '' or Decimal(form_data['alkalinity']) < 0:
+            flash("Alkalinity must be great than zero", "advanced")
+            is_valid = False
+        # TDS must be greater than 0 and not empty
+        if form_data['TDS'] == '' or Decimal(form_data['TDS']) < 0:
+            flash("TDS must be great than zero", "advanced")
+            is_valid = False
+        return is_valid

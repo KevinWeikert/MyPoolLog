@@ -45,6 +45,16 @@
         <img class="logo" src="{{ url_for('static', filename='/images/poollog-logo.png') }}">
         <span class="fs-4">My Pool Log</span>
       </a>
+      <div class="btn-group me-3">
+        <button class="btn btn-primary btn-sm dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+          Add Readings
+        </button>
+        <ul class="dropdown-menu dropdown-menu-dark">
+          {%for one_pool in this_user.pools%}
+          <li><a class="dropdown-item" href="/pool/{{one_pool.id}}/readings/add">{{one_pool.name}}</a></li>
+          {%endfor%}
+        </ul>
+      </div>
       <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbar" aria-controls="offcanvasNavbar">
         <span class="navbar-toggler-icon"></span>
       </button>
@@ -65,19 +75,6 @@
             <li class="nav-item">
               <a class="nav-link" href="/pool/add">Add Pool</a>
             </li>
-            <!-- <li class="nav-item dropdown">
-              <a class="nav-link dropdown-toggle" href="#" id="offcanvasNavbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                Pools
-              </a>
-              <ul class="dropdown-menu" aria-labelledby="offcanvasNavbarDropdown">
-                <li><a class="dropdown-item" href="#">Action</a></li>
-                <li><a class="dropdown-item" href="#">Another action</a></li>
-                <li>
-                  <hr class="dropdown-divider">
-                </li>
-                <li><a class="dropdown-item" href="#">Something else here</a></li>
-              </ul>
-            </li> -->
             <li class="nav-item">
               <a class="nav-link" href="#">My Account</a>
             </li>
@@ -95,7 +92,7 @@
     <h1 class="display-5 fw-bold">{{this_pool.name}}</h1>
     <div class="col-lg-10 mx-auto">
       <p class="lead mb-4">Let's check out your pool.</p>
-      <div class="card p-3 d-grid gap-2 d-sm-flex text-start justify-content-sm-start">
+      <div class="card  p-3 d-grid gap-2 d-sm-flex text-start justify-content-sm-start">
         <nav class="pool-nav">
           <div class="nav nav-tabs" id="nav-tab" role="tablist">
             <button class="nav-link active" id="nav-readings-tab" data-bs-toggle="tab" data-bs-target="#nav-readings" type="button" role="tab" aria-controls="nav-readings" aria-selected="false">Readings</button>
@@ -122,7 +119,7 @@
                   {% for one_reading in this_pool.readings %}
                     <tr>
                       <td>{{one_reading.free_chlorine}}</td>
-                      <td>{{one_reading.total_chlorine}}</td>
+                      <td>{{one_reading.combined_chlorine}}</td>
                       <td>{{one_reading.pH}}</td>
                       <td>{{one_reading.temperature}}℉</td>
                       <td>{{one_reading.calcium}}</td>

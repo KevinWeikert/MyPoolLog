@@ -51,6 +51,16 @@
         <img class="logo" src="{{ url_for('static', filename='/images/poollog-logo.png') }}">
         <span class="fs-4">My Pool Log</span>
       </a>
+      <div class="btn-group me-3">
+        <button class="btn btn-primary btn-sm dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+          Add Readings
+        </button>
+        <ul class="dropdown-menu dropdown-menu-dark">
+          {%for one_pool in this_user.pools%}
+          <li><a class="dropdown-item" href="/pool/{{one_pool.id}}/readings/add">{{one_pool.name}}</a></li>
+          {%endfor%}
+        </ul>
+      </div>
       <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbar" aria-controls="offcanvasNavbar">
         <span class="navbar-toggler-icon"></span>
       </button>
@@ -71,19 +81,6 @@
             <li class="nav-item">
               <a class="nav-link active" href="/pool/add">Add Pool</a>
             </li>
-            <!-- <li class="nav-item dropdown">
-              <a class="nav-link dropdown-toggle" href="#" id="offcanvasNavbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                Pools
-              </a>
-              <ul class="dropdown-menu" aria-labelledby="offcanvasNavbarDropdown">
-                <li><a class="dropdown-item" href="#">Action</a></li>
-                <li><a class="dropdown-item" href="#">Another action</a></li>
-                <li>
-                  <hr class="dropdown-divider">
-                </li>
-                <li><a class="dropdown-item" href="#">Something else here</a></li>
-              </ul>
-            </li> -->
             <li class="nav-item">
               <a class="nav-link" href="#">My Account</a>
             </li>

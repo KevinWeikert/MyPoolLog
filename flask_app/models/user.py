@@ -51,7 +51,7 @@ class User:
     # Get current user with all pools
     @classmethod
     def user_with_all_pools(cls, data):
-        query = "SELECT * FROM users LEFT JOIN pools ON users.id = pools.user_id WHERE users.id = %(id)s;"
+        query = "SELECT * FROM users LEFT JOIN pools ON users.id = pools.user_id WHERE users.id = %(user_id)s;"
         results = results = connectToMySQL(cls.database_schema_name).query_db(query, data)
         print(results)
         if len(results) == 0:

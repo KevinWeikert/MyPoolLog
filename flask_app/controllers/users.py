@@ -52,7 +52,7 @@ def dashboard():
         return redirect('/')
     else:
         data = {
-            "id": session['user_id']
+            "user_id": session['user_id']
         }    
         return render_template('dashboard.html', this_user = user.User.user_with_all_pools(data))
 

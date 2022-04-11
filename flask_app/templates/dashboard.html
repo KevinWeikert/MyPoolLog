@@ -45,6 +45,16 @@
         <img class="logo" src="{{ url_for('static', filename='/images/poollog-logo.png') }}">
         <span class="fs-4">My Pool Log</span>
       </a>
+      <div class="btn-group me-3">
+        <button class="btn btn-primary btn-sm dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+          Add Readings
+        </button>
+        <ul class="dropdown-menu dropdown-menu-dark">
+          {%for one_pool in this_user.pools%}
+          <li><a class="dropdown-item" href="/pool/{{one_pool.id}}/readings/add">{{one_pool.name}}</a></li>
+          {%endfor%}
+        </ul>
+      </div>
       <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbar" aria-controls="offcanvasNavbar">
         <span class="navbar-toggler-icon"></span>
       </button>
@@ -60,26 +70,13 @@
           <h5 class="offcanvas-title" id="offcanvasNavbarLabel">Welcome {{session['first_name']}}!</h5>
           <ul class="navbar-nav justify-content-end flex-grow-1 pe-3">
             <li class="nav-item">
-              <a class="nav-link active" aria-current="page" href="/dashboard">Dashboard</a>
+              <a class="nav-link fs-5 active" aria-current="page" href="/dashboard">Dashboard</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="/pool/add">Add Pool</a>
+              <a class="nav-link fs-5" href="/pool/add">Add Pool</a>
             </li>
-            <!-- <li class="nav-item dropdown">
-              <a class="nav-link dropdown-toggle" href="#" id="offcanvasNavbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                Pools
-              </a>
-              <ul class="dropdown-menu" aria-labelledby="offcanvasNavbarDropdown">
-                <li><a class="dropdown-item" href="#">Action</a></li>
-                <li><a class="dropdown-item" href="#">Another action</a></li>
-                <li>
-                  <hr class="dropdown-divider">
-                </li>
-                <li><a class="dropdown-item" href="#">Something else here</a></li>
-              </ul>
-            </li> -->
             <li class="nav-item">
-              <a class="nav-link" href="#">My Account</a>
+              <a class="nav-link fs-5" href="#">My Account</a>
             </li>
             <li class="nav-item">
               <a class="nav-link btn btn-primary text-white" href="/logout">Logout</a>
@@ -95,8 +92,8 @@
     <div class="col-lg-6 mx-auto">
       <p class="lead mb-4">Thank you for creating an account with us. Here is your dashboard.</p>
       <div class="d-grid gap-2 d-sm-flex justify-content-sm-center">
-        <table class="table table-hover">
-          <thead class="table-primary">
+        <table class="table table-striped align-middle">
+          <thead class="table-dark">
             <th>Pool Name</th>
             <th>Water Volume</th>
             <th>Sanitizer</th>
@@ -118,7 +115,8 @@
                     <p>Outdoor</p>
                   {%endif%}</td>
               <td>
-                  <a class="btn-sm btn-outline-secondary" href="/pool/{{one_pool.id}}">View Pool</a> 
+                  <a class="btn-sm btn-primary" href="/pool/{{one_pool.id}}">View Pool</a>
+                  <a class="btn-sm btn-secondary" href="/pool/{{one_pool.id}}/readings/add">Add Reading</a>
             </tr>
           {%endfor%}
           {%endif%}

@@ -63,7 +63,10 @@ def add_pool_page():
         'Chlorine': 'Chlorine: Tablet, Liquid, or Gas',
         'Salt Water': 'Salt Water Chlorinators',
     }
-    return render_template('add_pool.html', states = states, sanitizers = sanitizers)
+    data ={
+        "user_id": session['user_id']
+    }
+    return render_template('add_pool.html', states = states, sanitizers = sanitizers, this_user = user.User.user_with_all_pools(data))
 
 @app.route('/add-pool-db', methods=['POST'])
 def add_pool_db():
@@ -90,6 +93,7 @@ def show_pool(id):
     if 'user_id' not in session:
         return redirect('/')
     data = {
-        "id": id
+        "id": id,
+        "user_id": session['user_id']
     }
-    return render_template("show_pool.html", this_pool=pool.Pool.get_one_pool_with_all_readings(data))
+    return render_template("show_pool.html", this_pool=pool.Pool.get_one_pool_with_all_readings(data), this_user = user.User.user_with_all_pools(data))
