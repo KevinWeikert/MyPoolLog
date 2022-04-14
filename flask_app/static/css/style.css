@@ -14,3 +14,16 @@ nav{
     display: flex;
     justify-content: space-between;
 }
+
+.my-account-card{
+    min-height: 400px;
+}
+
+@media only screen and (max-width: 600px){
+    .pool-nav{
+        max-width: 475px;
+    }
+    .tab-content{
+        max-width: 475px;
+    }
+}

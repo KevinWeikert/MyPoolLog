@@ -1,0 +1,180 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="Mark Otto, Jacob Thornton, and Bootstrap contributors">
+    <meta name="generator" content="Hugo 0.88.1">
+    <title>Dashboard</title>
+
+    <link rel="canonical" href="https://getbootstrap.com/docs/5.1/examples/heroes/">
+
+
+    <!-- Bootstrap core CSS -->
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='/css/bootstrap.css') }}">
+
+    <style>
+      .bd-placeholder-img {
+        font-size: 1.125rem;
+        text-anchor: middle;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        user-select: none;
+      }
+
+      @media (min-width: 768px) {
+        .bd-placeholder-img-lg {
+          font-size: 3.5rem;
+        }
+      }
+
+      input[type=number]::-webkit-inner-spin-button, 
+      input[type=number]::-webkit-outer-spin-button { 
+        -webkit-appearance: none; 
+        margin: 0; 
+      }
+    </style>
+
+    
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='/css/headers.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='/css/heroes.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='/css/style.css') }}">
+  </head>
+  <body>
+    
+<main>
+  <nav class="navbar navbar-light bg-white fixed-top">
+    <div class="container-fluid">
+      <a href="/dashboard" class="d-flex align-items-center mb-3 mb-md-0 me-md-auto text-dark text-decoration-none">
+        <img class="logo" src="{{ url_for('static', filename='/images/poollog-logo.png') }}">
+        <span class="fs-4">My Pool Log</span>
+      </a>
+      <div class="btn-group me-3">
+        <button class="btn btn-primary btn-sm dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+          Add Readings
+        </button>
+        <ul class="dropdown-menu dropdown-menu-dark">
+          {%for one_pool in this_user.pools%}
+          <li><a class="dropdown-item" href="/pool/{{one_pool.id}}/readings/add">{{one_pool.name}}</a></li>
+          {%endfor%}
+        </ul>
+      </div>
+      <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbar" aria-controls="offcanvasNavbar">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasNavbar" aria-labelledby="offcanvasNavbarLabel">
+        <div class="offcanvas-header">
+          <a href="/dashboard" class="d-flex align-items-center mb-3 mb-md-0 me-md-auto text-dark text-decoration-none">
+            <img class="logo" src="{{ url_for('static', filename='/images/poollog-logo.png') }}">
+            <span class="fs-4">My Pool Log</span>
+          </a>
+          <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+        </div>
+        <div class="offcanvas-body">
+          <h5 class="offcanvas-title" id="offcanvasNavbarLabel">Welcome {{session['first_name']}}!</h5>
+          <ul class="navbar-nav justify-content-end flex-grow-1 pe-3">
+            <li class="nav-item">
+              <a class="nav-link active" aria-current="page" href="/dashboard">Dashboard</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="/pool/add">Add Pool</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#">My Account</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link btn btn-primary text-white" href="/logout">Logout</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <div class="container px-4 py-5 my-5">
+    <h1 class="display- fw-bold lh-1 mb-3">My Account</h1>
+    <div class="container col-xl-10 px-4 py-5">
+      <div class="row align-items-start g-lg-5 py-5">
+        <div class="col-lg-7 text-center text-lg-start">
+          <h3 class=" fw-bold lh-1 mb-3">Edit Profile</h3>
+          {% with messages = get_flashed_messages(category_filter=["edit"]) %}     <!-- declare a variable called messages -->
+            {% if messages %}                            <!-- check if there are any messages -->
+              {% for message in messages %}            <!-- loop through the messages -->
+                  <p>{{message}}</p>                   <!-- display each message in a paragraph tag -->
+              {% endfor %}
+            {% endif %}
+          {% endwith %}
+        <!-- Edit Profile -->
+        <form class="p-4 p-md-5 border rounded-3 bg-light" action="/edit_profile" method="post">
+          <!-- First Name Field -->
+          <div class="form-floating mb-3">
+            <input type="text" class="form-control" id="floatingFirstName"  value="{{this_user.first_name}}" name="first_name"> 
+            <label for="floatingFirstName">First Name</label>
+          </div>
+          <!-- Last Name Field -->
+          <div class="form-floating mb-3">
+            <input type="text" class="form-control" id="floatingLastName"  value="{{this_user.last_name}}" name="last_name"> 
+            <label for="floatingLastName">Last Name</label>
+          </div>
+          <!-- Email Field -->
+          <div class="form-floating mb-3">
+            <input type="email" class="form-control" id="floatingEmail"  value="{{this_user.email}}" name="email"> 
+            <label for="floatingEmail">Email</label>
+          </div>
+          {%if this_user.phone != None%}
+          <!-- Phone Field -->
+          <div class="form-floating mb-3">
+            <input type="" class="form-control" id="floatingPhoneNumber"  value="{{this_user.phone}}" name="phone"> 
+            <label for="floatingPhoneNumber">Phone Number</label>
+          </div>
+          {%else%}
+          <!-- Phone Field -->
+          <div class="form-floating mb-3">
+            <input type="number" class="form-control" id="floatingPhoneNumber"  placeholder="1234567890" name="phone"> 
+            <label for="floatingPhoneNumber">Phone Number</label>
+          </div>
+          {%endif%}
+          <hr class="my-4">
+          <input class="w-100 btn btn-lg btn-primary" type="submit" value="Update Profile">
+        </form>
+        </div>
+  
+        <div class="col-md-10 mx-auto col-lg-5">
+          <h3 class="fw-bold lh-1 mb-3">Change Password</h3>
+          {% with messages = get_flashed_messages(category_filter=["change_password"]) %}     <!-- declare a variable called messages -->
+            {% if messages %}                            <!-- check if there are any messages -->
+                {% for message in messages %}            <!-- loop through the messages -->
+                    <p>{{message}}</p>                   <!-- display each message in a paragraph tag -->
+                {% endfor %}
+            {% endif %}
+          {% endwith %}
+          <!-- Change Passsword -->
+          <form class="p-4 p-md-5 border rounded-3 bg-light" action="/change_password" method="post">
+            <!-- Password Field -->
+            <div class="form-floating mb-3">
+              <input type="password" class="form-control" id="floatingPassword"  placeholder="Password" name="password"> 
+              <label for="floatingPassword">Change Password</label>
+            </div>
+            <!-- Confirm Password Field -->
+            <div class="form-floating mb-3">  
+              <input type="password" class="form-control" id="floatingConfirmPassword"  placeholder="Confirm Password" name="confirm_password"> 
+              <label for="floatingConfirmPassword">Confirm Password</label>
+            </div>
+            <hr class="my-4">
+            <input class="w-100 btn btn-lg btn-primary" type="submit" value="Change Password">
+          </form>
+        </div>
+      </div>
+    
+    </div>
+    
+  </div>
+</main>
+
+
+    <script type="text/javascript" src="{{ url_for('static', filename='/js/bootstrap.js') }}"></script> 
+
+      
+  </body>
+</html>

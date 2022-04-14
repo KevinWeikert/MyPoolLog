@@ -56,6 +56,44 @@ def dashboard():
         }    
         return render_template('dashboard.html', this_user = user.User.user_with_all_pools(data))
 
+@app.route('/my_account')
+def my_account():
+    if 'user_id' not in session:
+        return redirect('/')
+    else:
+        data = {
+            "user_id": session['user_id']
+        }    
+        return render_template('my_account.html', this_user = user.User.user_with_all_pools(data))
+
+@app.route('/edit_profile', methods=['POST'])
+def edit_profile():
+    if not user.User.validate_edit_profile(request.form):
+        return redirect ('/my_account')
+    else:
+        data = {
+            'user_id': session['user_id'],
+            'first_name': request.form['first_name'],
+            'last_name': request.form['last_name'],
+            'email': request.form['email'],
+            'phone': request.form['phone'],
+        }
+        user.User.edit_profile(data)
+        return redirect('/my_account')
+
+@app.route('/change_password', methods=['POST'])
+def change_password():
+    if not user.User.validate_change_password(request.form):
+        return redirect ('/my_account')
+    else:
+        pw_hash = bcrypt.generate_password_hash(request.form['password'])
+        data = {
+            'user_id': session['user_id'],
+            'password': pw_hash,
+        }
+        user.User.change_password(data)
+        return redirect('my_account')
+
 @app.route('/logout')
 def logout():
     session.clear()

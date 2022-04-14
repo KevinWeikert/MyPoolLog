@@ -1,7 +1,7 @@
 from multiprocessing import pool
 from flask_app.config.mysqlconnection import connectToMySQL
 from flask_app import app
-from flask import flash
+from flask import flash, session
 from flask_bcrypt import Bcrypt
 from flask_app.models import pool
 bcrypt = Bcrypt(app)
@@ -76,6 +76,16 @@ class User:
                 this_user.pools.append(pool.Pool(pool_data))
             return this_user
 
+    @classmethod
+    def edit_profile(cls, data):
+        query = "UPDATE users SET first_name=%(first_name)s, last_name=%(last_name)s, email=%(email)s, phone=%(phone)s WHERE users.id = %(user_id)s;"
+        return connectToMySQL(cls.database_schema_name).query_db(query,data)
+
+    @classmethod
+    def change_password(cls, data):
+        query = "UPDATE users SET password=%(password)s WHERE users.id = %(user_id)s;"
+        return connectToMySQL(cls.database_schema_name).query_db(query,data)
+
     @staticmethod
     def validate_user_registration(form_data):
         is_valid = True
@@ -88,7 +98,6 @@ class User:
         if not EMAIL_REGEX.match(form_data['email']): 
             flash("Invalid email address!", "registration")
             is_valid = False
-        # Add validation for Unique Email
         data = {
             "email": form_data["email"]
         }
@@ -109,7 +118,53 @@ class User:
         #     flash("Must Agree to Terms of Use", "registration")
         #     is_valid = False
         return is_valid
+
+    @staticmethod
+    def validate_edit_profile(form_data):
+        is_valid = True
+        if len(form_data['first_name']) < 3:
+            flash("First must be at least 3 characters", "edit")
+            is_valid = False
+        if len(form_data['last_name']) < 3:
+            flash("Last Name must be at least 3 characters", "edit")
+            is_valid = False
+        if not EMAIL_REGEX.match(form_data['email']): 
+            flash("Invalid email address!", "edit")
+            is_valid = False
+        data = {
+            "email": form_data["email"]
+        }
+        found_user_or_false = User.get_user_by_email(data)
+        if found_user_or_false.id == session['user_id']:
+            is_valid = True
+        else:
+            if(found_user_or_false != False):
+                is_valid = False
+                flash("Email is Already Registered", "edit")
+        if len(form_data['phone']) < 10:
+            flash("Invalid Phone Number", "edit")
+            is_valid = False
+        return is_valid
     
+    @staticmethod
+    def validate_change_password(form_data):
+        is_valid = True
+        data={
+            'id': session['user_id']
+        }
+        current_user = User.get_user_by_id(data)
+        if(form_data['password'] == current_user.password):
+            flash("Password cannot be the same as current password", "change_password")
+            is_valid = False
+        if len(form_data['password']) < 8:
+            flash("Password must be at Least 8 Characters", "change_password")
+            is_valid = False
+        if form_data['password'] != form_data['confirm_password']:
+            flash("Passwords Don't Match", "change_password")
+            is_valid = False
+        return is_valid
+
+
     # Static Method to validate user login information. This option is instead of the validation in the route
     # @staticmethod
     # def validate_user_login(data):

@@ -90,9 +90,9 @@
 
   <div class="px-4 py-5 my-5 text-center">
     <h1 class="display-5 fw-bold">{{this_pool.name}}</h1>
-    <div class="col-lg-10 mx-auto">
+    <div class=" mx-auto">
       <p class="lead mb-4">Let's check out your pool.</p>
-      <div class="card  p-3 d-grid gap-2 d-sm-flex text-start justify-content-sm-start">
+      <div class="pool-card card p-3 d-grid gap-2 d-sm-flex text-start justify-content-sm-start">
         <nav class="pool-nav">
           <div class="nav nav-tabs" id="nav-tab" role="tablist">
             <button class="nav-link active" id="nav-readings-tab" data-bs-toggle="tab" data-bs-target="#nav-readings" type="button" role="tab" aria-controls="nav-readings" aria-selected="false">Readings</button>
@@ -102,36 +102,119 @@
         </nav>
         <div class="tab-content" id="nav-tabContent">
           <div class="tab-pane fade show active" id="nav-readings" role="tabpanel" aria-labelledby="nav-readings-tab">
-            <div class="table-responsive">
-              <table class="table table-hover text-center align-middle table-striped">
-                <thead class="table-dark">
-                  <th>Free Chlorine</th>
-                  <th>Combined Chlorine</th>
-                  <th>pH</th>
-                  <th>Temperature</th>
-                  <th>Calcium Hardness</th>
-                  <th>Total Alkality</th>
-                  <th>TDS</th>
-                  <th>Saturation Index</th>
-                  <th>Entry Date/Time</th>
-                </thead>
-                <tbody>
-                  {% for one_reading in this_pool.readings %}
-                    <tr>
-                      <td>{{one_reading.free_chlorine}}</td>
-                      <td>{{one_reading.combined_chlorine}}</td>
-                      <td>{{one_reading.pH}}</td>
-                      <td>{{one_reading.temperature}}℉</td>
-                      <td>{{one_reading.calcium}}</td>
-                      <td>{{one_reading.alkalinity}}</td>
-                      <td>{{one_reading.TDS}}</td>
-                      <td>{{one_reading.saturation_index}}</td>
-                      <td>{{one_reading.created_at}}</td>
-                    </tr>
-                  {%endfor%}
-                </tbody>
-              </table>
+            {%if this_pool.readings[0].created_at == None%}
+            <h3 class="text-center">Oh, No! You don't have any readings. Let's add your first reading.</h3>
+            {%else%}
+            <div class="accordion" id="accordionReadings">
+              {%for one_reading in this_pool.readings%}
+              {%if loop.index == 1%}
+              <div class="accordion-item">
+                <h2 class="accordion-header" id="heading{{one_reading.id}}">
+                  <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapse{{one_reading.id}}" aria-expanded="true" aria-controls="collapse{{one_reading.id}}">
+                    Date: {{one_reading.created_at.strftime('%m/%d/%Y at %H:%M')}}
+                  </button>
+                </h2>
+                <div id="collapse{{one_reading.id}}" class="accordion-collapse collapse show" aria-labelledby="heading{{one_reading.id}}" data-bs-parent="#accordionReadings">
+                  <div class="accordion-body">
+                    <div class="table-responsive ">
+                      <table class="table text-center align-middle">
+                        <thead class="table-light">
+                          <th>Free Chlorine</th>
+                          <th>pH</th>
+                          <th>Temperature ℉</th>
+                        </thead>
+                        <tbody>
+                            <tr>
+                              <td>{{one_reading.free_chlorine}}</td>
+                              <td>{{one_reading.pH}}</td>
+                              <td>{{one_reading.temperature}}℉</td>
+                            </tr>
+                            {%if one_reading.combined_chlorine != None%}
+                            <tr>
+                              <td colspan="3">
+                                <table class="table mb-0">
+                                  <thead class="table-light">
+                                    <th>Combined Chlorine</th>
+                                    <th>Calcium</th>
+                                    <th>Alkality</th>
+                                    <th>TDS</th>
+                                    <th>Saturation Index</th>
+                                  </thead>
+                                  <tbody>
+                                      <tr>
+                                        <td>{{one_reading.combined_chlorine}}</td>
+                                        <td>{{one_reading.calcium}}</td>
+                                        <td>{{one_reading.alkalinity}}</td>
+                                        <td>{{one_reading.TDS}}</td>
+                                        <td>{{one_reading.saturation_index}}</td>
+                                      </tr>
+                                  </tbody>
+                                </table>
+                              </td>
+                            </tr>
+                            {%endif%}
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              {%else%}
+              <div class="accordion-item">
+                <h2 class="accordion-header" id="heading{{one_reading.id}}">
+                  <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse{{one_reading.id}}" aria-expanded="false" aria-controls="collapse{{one_reading.id}}">
+                    Date: {{one_reading.created_at.strftime('%m/%d/%Y at %H:%M')}}
+                  </button>
+                </h2>
+                <div id="collapse{{one_reading.id}}" class="accordion-collapse collapse " aria-labelledby="heading{{one_reading.id}}" data-bs-parent="#accordionReadings">
+                <div class="accordion-body">
+                  <div class="table-responsive ">
+                    <table class="table text-center align-middle">
+                      <thead class="table-light">
+                        <th>Free Chlorine</th>
+                        <th>pH</th>
+                        <th>Temperature ℉</th>
+                      </thead>
+                      <tbody>
+                          <tr>
+                            <td>{{one_reading.free_chlorine}}</td>
+                            <td>{{one_reading.pH}}</td>
+                            <td>{{one_reading.temperature}}℉</td>
+                          </tr>
+                          {%if one_reading.combined_chlorine != None%}
+                          <tr>
+                            <td colspan="3">
+                              <table class="table mb-0">
+                                <thead class="table-light">
+                                  <th>Combined Chlorine</th>
+                                  <th>Calcium</th>
+                                  <th>Alkality</th>
+                                  <th>TDS</th>
+                                  <th>Saturation Index</th>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                      <td>{{one_reading.combined_chlorine}}</td>
+                                      <td>{{one_reading.calcium}}</td>
+                                      <td>{{one_reading.alkalinity}}</td>
+                                      <td>{{one_reading.TDS}}</td>
+                                      <td>{{one_reading.saturation_index}}</td>
+                                    </tr>
+                                </tbody>
+                              </table>
+                            </td>
+                          </tr>
+                          {%endif%}
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+                </div>
+              </div>
+              {%endif%}
+              {%endfor%}
             </div>
+            {%endif%}
           </div>
           <div class="tab-pane fade" id="nav-details" role="tabpanel" aria-labelledby="nav-details-tab">
             <table class="table text-center align-middle">
