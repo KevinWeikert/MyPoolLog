@@ -10,7 +10,6 @@
 
     <link rel="canonical" href="https://getbootstrap.com/docs/5.1/examples/heroes/">
 
-    
 
     <!-- Bootstrap core CSS -->
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='/css/bootstrap.css') }}">
@@ -85,10 +84,10 @@
             </li>
             {%if this_user.admin == 1%}
             <li class="nav-item">
-              <a class="nav-link fs-5 active" href="/pool/add">Add Pool</a>
+              <a class="nav-link fs-5" href="/pool/add">Add Pool</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link fs-5" href="/add-staff-page">Add Staff</a>
+              <a class="nav-link fs-5 active" href="/add-staff-page">Add Staff</a>
             </li>
             {%endif%}
             <li class="nav-item">
@@ -99,103 +98,82 @@
       </div>
     </div>
   </nav>
-  <div class="container">
 
-  <div class="container m-auto">
-    <div class="px-4 py-5 my-5 text-center">
-        <div class="text-center text-lg-start">
-          <h1 class="display-4 fw-bold lh-1 mb-3">Add Pool</h1>
-          <!-- <p class="col-lg-10 fs-4 text-muted">If you haven't been here before please register below.</p> -->
+  <div class="container px-4 py-5 my-5">
+    <h1 class="display- fw-bold lh-1 mb-3">My Account</h1>
+    <div class="container col-xl-10 px-4 py-5">
+      <div class="row align-items-start g-lg-5 py-5">
+        <div class="col-lg-7 text-center text-lg-start">
+          <h3 class=" fw-bold lh-1 mb-3">Add Staff Member</h3>
           {% with messages = get_flashed_messages() %}     <!-- declare a variable called messages -->
-          {% if messages %}                            <!-- check if there are any messages -->
+            {% if messages %}                            <!-- check if there are any messages -->
               {% for message in messages %}            <!-- loop through the messages -->
                   <p>{{message}}</p>                   <!-- display each message in a paragraph tag -->
               {% endfor %}
-          {% endif %}
-        {% endwith %}
-        <!-- Start of Survey -->
-        <form class="p-4 p-md-5 border rounded-3 bg-light" action="/add-pool-db" method="POST">
-          <!-- Pool Name Field -->
+            {% endif %}
+          {% endwith %}
+        <!-- Add Staff Member -->
+        <form class="p-4 p-md-5 border rounded-3 bg-light" action="/add-staff-db" method="post">
+          <!-- First Name Field -->
           <div class="form-floating mb-3">
-            <input type="text" class="form-control" id="floatingName"  placeholder="Pool Name" name="name"> 
-            <label for="floatingName">Pool Name</label>
+            <input type="text" class="form-control" id="floatingFirstName"  placeholder="First Name" name="first_name"> 
+            <label for="floatingFirstName">First Name</label>
           </div>
-          <!-- Address Field -->
+          <!-- Last Name Field -->
           <div class="form-floating mb-3">
-            <input type="text" class="form-control" id="floatingAddress"  placeholder="Address" name="street_address"> 
-            <label for="floatingAddress">Address</label>
+            <input type="text" class="form-control" id="floatingLastName"  placeholder="Last Name" name="last_name"> 
+            <label for="floatingLastName">Last Name</label>
           </div>
-          <div class="row ">
-            <!-- City -->
-            <div class="col">
-              <div class="form-floating mb-3">
-                <input type="text" class="form-control" id="floatingCity"  placeholder="City" name="city"> 
-                <label for="floatingCity">City</label>
-              </div>
-            </div>
-            <!-- State -->
-            <div class="col">
-              <div class="form-floating mb-3">
-                <select class="form-select" name="state" id="floatingState" aria-label="Select State" aria-placeholder="Select State">
-                  <option value="No State Selected">Select a State</option>
-                  {%for key, value in states.items()%}
-                  <option value="{{key}}">{{value}}</option>
-                  {%endfor%}
-                </select>
-                <label for="floatingState">State</label>
-              </div>
-            </div>
-            <!-- Zipcode -->
-            <div class="col">
-              <div class=" form-floating mb-3">
-                <input type="number" class="form-control" id="floatingZipcode"  placeholder="Zipcode" name="zipcode"> 
-                <label for="floatingZipcode">Zipcode</label>
-              </div>
-            </div>
-            </div>
-            <h3>Pool Details</h3>
-            <div class="row">
-              <!-- Water Volume -->
-              <div class="col">
-                <div class="form-floating mb-3">
-                  <input type="number" class="form-control" id="floatingWaterVolume"  placeholder="65000" name="water_volume"> 
-                  <label for="floatingwater_volume">Water Volume in Gallons</label>
-                </div>
-              </div>
-              <!-- Indoor or Outdoor -->
-              <div class="col">
-                <div class="form-floating mb-3">
-                  Is your pool indoor or outdoor?
-                </div>
-                <div class="form-check form-check-inline">
-                  <input class="form-check-input" type="radio" name="indoor_outdoor" id="indoor" value="0" checked>
-                  <label class="form-check-label" for="indoor">Indoor</label>
-                </div>
-                <div class="form-check form-check-inline">
-                  <input class="form-check-input" type="radio" name="indoor_outdoor" id="Outdoor" value="1">
-                  <label class="form-check-label" for="Outdoor">Outdoor</label>
-                </div>
-              </div>
-              <!-- Sanitizer -->
-              <div class="col">
-                <div class="form-floating mb-3 mt-3">
-                  <select class="form-select" id="floatingSanitizer" name="sanitizer" aria-label="Select Sanitizer">
-                    <option>Select a Sanitizer</option>
-                    {%for key, value in sanitizers.items()%}
-                    <option value="{{key}}">{{value}}</option>
-                    {%endfor%}
-                  </select>
-                  <label for="floatingSanitizer">Sanitizer</label>
-                </div>
-              </div>
-            </div>
-          <input type="hidden" name="user_id" value="{{session['user_id']}}">
+          <!-- Email Field -->
+          <div class="form-floating mb-3">
+            <input type="email" class="form-control" id="floatingEmail"  placeholder="Email" name="email"> 
+            <label for="floatingEmail">Email</label>
+          </div>
+          <!-- Password Field -->
+          <div class="form-floating mb-3">
+            <input type="password" class="form-control" id="floatingPassword"  placeholder="Password" name="password"> 
+            <label for="floatingPassword">Password</label>
+          </div>
+          <!-- Confirm Password Field -->
+          <div class="form-floating mb-3">  
+            <input type="password" class="form-control" id="floatingConfirmPassword"  placeholder="Confirm Password" name="confirm_password"> 
+            <label for="floatingConfirmPassword">Confirm Password</label>
+          </div>
           <hr class="my-4">
-          <input class="w-100 btn btn-lg btn-primary" type="submit" value="Add Pool">
+          <input type="hidden" name="admin" value="0">
+          <input class="w-100 btn btn-lg btn-primary" type="submit" value="Add Staff Member">
         </form>
         </div>
-  </div>
-  </div>
+        <div class="col">
+          <h3 class=" fw-bold lh-1 mb-3">Add Staff to Pool</h3>
+          <form class="p-4 p-md-5 border rounded-3 bg-light" action="/add-staff-pool" method="post">
+              <!-- Select Staff Member -->
+              <div class="form-floating mb-3">
+                <select class="form-select" name="staff_id" id="floatingState" aria-label="Select Staff Member" aria-placeholder="Select Staff Member">
+                  {%for one_staff in all_staff%}
+                  {%if one_staff != None%}
+                  <option value="{{one_staff.id}}">{{one_staff.first_name}} {{one_staff.last_name}}</option>
+                  {%else%}
+                  <p>Add staff members to add them to a pool</p>
+                  {%endif%}
+                  {%endfor%}
+                </select>
+                <label for="floatingState">Staff Member</label>
+              </div>
+             <!-- Select Pool Dropdown for staff to add readings -->
+              <div class="form-floating mb-3">
+                <select class="form-select" name="pool_id" id="floatingState" aria-label="Select Pool" aria-placeholder="Select Pool">
+                  {%for one_pool in this_user.pools%}
+                  <option value="{{one_pool.id}}">{{one_pool.name}}</option>
+                  {%endfor%}
+                </select>
+                <label for="floatingState">Pool</label>
+              </div>
+              <input class="w-100 btn btn-lg btn-primary" type="submit" value="Add Staff to Pool">
+          </form>
+        </div>
+      </div>
+    </div>
   </div>
 </main>
 

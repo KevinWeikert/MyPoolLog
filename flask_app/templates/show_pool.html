@@ -45,6 +45,7 @@
         <img class="logo" src="{{ url_for('static', filename='/images/poollog-logo.png') }}">
         <span class="fs-4">My Pool Log</span>
       </a>
+      {%if this_user.admin == 1%}
       <div class="btn-group me-3">
         <button class="btn btn-primary btn-sm dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
           Add Readings
@@ -55,6 +56,7 @@
           {%endfor%}
         </ul>
       </div>
+      {%endif%}
       <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbar" aria-controls="offcanvasNavbar">
         <span class="navbar-toggler-icon"></span>
       </button>
@@ -70,14 +72,19 @@
           <h5 class="offcanvas-title" id="offcanvasNavbarLabel">Welcome {{session['first_name']}}!</h5>
           <ul class="navbar-nav justify-content-end flex-grow-1 pe-3">
             <li class="nav-item">
-              <a class="nav-link active" aria-current="page" href="/dashboard">Dashboard</a>
+              <a class="nav-link fs-5 " aria-current="page" href="/dashboard">Dashboard</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="/pool/add">Add Pool</a>
+              <a class="nav-link fs-5" href="/my_account">My Account</a>
+            </li>
+            {%if this_user.admin == 1%}
+            <li class="nav-item">
+              <a class="nav-link fs-5" href="/pool/add">Add Pool</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="#">My Account</a>
+              <a class="nav-link fs-5" href="/add-staff-page">Add Staff</a>
             </li>
+            {%endif%}
             <li class="nav-item">
               <a class="nav-link btn btn-primary text-white" href="/logout">Logout</a>
             </li>
@@ -111,7 +118,7 @@
               <div class="accordion-item">
                 <h2 class="accordion-header" id="heading{{one_reading.id}}">
                   <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapse{{one_reading.id}}" aria-expanded="true" aria-controls="collapse{{one_reading.id}}">
-                    Date: {{one_reading.created_at.strftime('%m/%d/%Y at %H:%M')}}
+                    Date: {{one_reading.created_at.strftime('%m/%d/%Y at %H:%M')}} - {{one_reading.user.first_name}} {{one_reading.user.last_name}}
                   </button>
                 </h2>
                 <div id="collapse{{one_reading.id}}" class="accordion-collapse collapse show" aria-labelledby="heading{{one_reading.id}}" data-bs-parent="#accordionReadings">
@@ -156,6 +163,9 @@
                         </tbody>
                       </table>
                     </div>
+                    {%if this_user.admin == 1%}
+                    <a class="btn-sm btn-danger" href="/pool/{{this_pool.id}}/readings/{{one_reading.id}}/delete">Delete Reading</a>
+                    {%endif%}
                   </div>
                 </div>
               </div>
@@ -163,7 +173,7 @@
               <div class="accordion-item">
                 <h2 class="accordion-header" id="heading{{one_reading.id}}">
                   <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse{{one_reading.id}}" aria-expanded="false" aria-controls="collapse{{one_reading.id}}">
-                    Date: {{one_reading.created_at.strftime('%m/%d/%Y at %H:%M')}}
+                    Date: {{one_reading.created_at.strftime('%m/%d/%Y at %H:%M')}} - {{one_reading.user.first_name}} {{one_reading.user.last_name}}
                   </button>
                 </h2>
                 <div id="collapse{{one_reading.id}}" class="accordion-collapse collapse " aria-labelledby="heading{{one_reading.id}}" data-bs-parent="#accordionReadings">
@@ -208,6 +218,9 @@
                       </tbody>
                     </table>
                   </div>
+                  {%if this_user.admin == 1%}
+                  <a class="btn-sm btn-danger" href="/pool/{{this_pool.id}}/readings/{{one_reading.id}}/delete">Delete Reading</a>
+                  {%endif%}
                 </div>
                 </div>
               </div>
@@ -217,28 +230,36 @@
             {%endif%}
           </div>
           <div class="tab-pane fade" id="nav-details" role="tabpanel" aria-labelledby="nav-details-tab">
-            <table class="table text-center align-middle">
-              <thead class="table-dark">
-                <th>Name</th>
-                <th>Address</th>
-                <th>Water Volume</th>
-                <th>Indoor or Outdoor?</th>
-              </thead>
-              <tbody>
-                  <tr>
-                    <td>{{this_pool.name}}</td>
-                    <td>{{this_pool.street_address}}<br>
-                      {{this_pool.city}}, {{this_pool.state}} {{this_pool.zipcode}}
-                    </td>
-                    <td>{{this_pool.water_volume}}</td>
-                    <td>{%if this_pool.indoor_outdoor == 0%}
-                      <p>Indoor</p>
-                    {%else%}
-                      <p>Outdoor</p>
-                    {%endif%}</td>
-                  </tr>
-              </tbody>
-            </table>
+            <div id="pool-details">
+              <table class="table text-center align-middle">
+                <thead class="table-dark">
+                  <th>Name</th>
+                  <th>Address</th>
+                  <th>Water Volume</th>
+                  <th>Indoor or Outdoor?</th>
+                </thead>
+                <tbody>
+                    <tr>
+                      <td>{{this_pool.name}}</td>
+                      <td>{{this_pool.street_address}}<br>
+                        {{this_pool.city}}, {{this_pool.state}} {{this_pool.zipcode}}
+                      </td>
+                      <td>{{this_pool.water_volume}}</td>
+                      <td>{%if this_pool.indoor_outdoor == 0%}
+                        <p>Indoor</p>
+                      {%else%}
+                        <p>Outdoor</p>
+                      {%endif%}</td>
+                    </tr>
+                </tbody>
+              </table>
+              {%if this_user.admin == 1%}
+              <a class="btn btn-primary" href="/pool/{{this_pool.id}}/edit">Update</a>
+              {%endif%}
+              <div class="text-center align-middle" id="all-staff">
+                <a class="btn text-center" onclick="get_one_pool_staff({{this_pool.id}})">Show Staff</a>
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -248,6 +269,7 @@
 
 
     <script type="text/javascript" src="{{ url_for('static', filename='/js/bootstrap.js') }}"></script> 
+    <script type="text/javascript" src="{{ url_for('static', filename='/js/ajax_file.js') }}"></script> 
 
       
   </body>

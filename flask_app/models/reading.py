@@ -24,6 +24,7 @@ class Reading:
         self.user_id = data['user_id']
         self.pool_id = data['pool_id']
         self.pool = None
+        self.user = None
     
     # Add Simple Reading to Database
     @classmethod
@@ -35,6 +36,12 @@ class Reading:
     @classmethod
     def add_advanced_reading(cls, data):
         query = "INSERT INTO readings (free_chlorine, total_chlorine, combined_chlorine, pH, temperature, calcium, alkalinity, TDS, saturation_index, user_id, pool_id) VALUES (%(free_chlorine)s, %(total_chlorine)s, %(combined_chlorine)s, %(pH)s, %(temperature)s,%(calcium)s, %(alkalinity)s, %(TDS)s, %(saturation_index)s, %(user_id)s, %(id)s);"
+        return connectToMySQL(cls.database_schema_name).query_db(query, data)
+
+    #Delete Reading from Database
+    @classmethod
+    def delete_reading(cls, data):
+        query = "DELETE FROM readings WHERE readings.id = %(reading_id)s;"
         return connectToMySQL(cls.database_schema_name).query_db(query, data)
 
 

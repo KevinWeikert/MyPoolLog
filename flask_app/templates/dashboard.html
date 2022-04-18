@@ -45,6 +45,7 @@
         <img class="logo" src="{{ url_for('static', filename='/images/poollog-logo.png') }}">
         <span class="fs-4">My Pool Log</span>
       </a>
+      {%if this_user.admin == 1%}
       <div class="btn-group me-3">
         <button class="btn btn-primary btn-sm dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
           Add Readings
@@ -55,6 +56,7 @@
           {%endfor%}
         </ul>
       </div>
+      {%endif%}
       <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbar" aria-controls="offcanvasNavbar">
         <span class="navbar-toggler-icon"></span>
       </button>
@@ -73,11 +75,16 @@
               <a class="nav-link fs-5 active" aria-current="page" href="/dashboard">Dashboard</a>
             </li>
             <li class="nav-item">
+              <a class="nav-link fs-5" href="/my_account">My Account</a>
+            </li>
+            {%if this_user.admin == 1%}
+            <li class="nav-item">
               <a class="nav-link fs-5" href="/pool/add">Add Pool</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link fs-5" href="/my_account">My Account</a>
+              <a class="nav-link fs-5" href="/add-staff-page">Add Staff</a>
             </li>
+            {%endif%}
             <li class="nav-item">
               <a class="nav-link btn btn-primary text-white" href="/logout">Logout</a>
             </li>
@@ -101,10 +108,28 @@
             <th></th>
         </thead>
         <tbody>
-          {%if all_pools == None%}
-            <p>Add a Pool</p>
-          {%else%}
-          {% for one_pool in this_user.pools %}
+          {%if this_user.admin == 1%}
+            {%if all_pools == None%}
+              <p>Add a Pool</p>
+            {%else%}
+              {% for one_pool in this_user.pools %}
+                <tr>
+                  <td>{{one_pool.name}}</td>
+                  <td>{{one_pool.water_volume}}</td>
+                  <td>{{one_pool.sanitizer}}</td>
+                  <td>{%if one_pool.indoor_outdoor == 0%}
+                        <p>Indoor</p>
+                      {%else%}
+                        <p>Outdoor</p>
+                      {%endif%}</td>
+                  <td>
+                      <a class="btn-sm btn-primary" href="/pool/{{one_pool.id}}">View Pool</a>
+                      <a class="btn-sm btn-secondary" href="/pool/{{one_pool.id}}/readings/add">Add Reading</a>
+                </tr>
+              {%endfor%}
+            {%endif%}
+            {%else%}
+            {%for one_pool in this_staff.pools%}
             <tr>
               <td>{{one_pool.name}}</td>
               <td>{{one_pool.water_volume}}</td>

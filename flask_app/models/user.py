@@ -20,16 +20,69 @@ class User:
         self.password = data['password']
         self.phone = data['phone']
         self.terms_of_service = data['terms_of_service']
+        self.admin = data['admin']
         self.created_at = data['created_at']
         self.updated_at = data['updated_at']
         self.pools = []
 
-    # Save New User
+    # Save New Admin User
     @classmethod
     def save_user(cls, data):
         query = "INSERT INTO users (first_name, last_name, email, password, terms_of_service) VALUES (%(first_name)s, %(last_name)s, %(email)s, %(password)s, %(terms_of_service)s);"
         return connectToMySQL(cls.database_schema_name).query_db(query, data)
 
+    # Save New Staff User
+    @classmethod
+    def save_staff_user(cls, data):
+        query = "INSERT INTO users (first_name, last_name, email, password, admin) VALUES (%(first_name)s, %(last_name)s, %(email)s, %(password)s, %(admin)s);"
+        new_staff = connectToMySQL(cls.database_schema_name).query_db(query, data)
+        return new_staff
+
+    #Add staff to pool
+    def add_staff_pool(data):
+        query = "INSERT INTO  staffs (staff_id, pool_id) VALUES (%(staff_id)s, %(pool_id)s);"
+        return connectToMySQL('my_pool_log').query_db(query, data)
+
+    #Get all Staff
+    @classmethod
+    def get_all_staff(cls):
+        query = "SELECT * FROM users WHERE admin=0;"
+        results = connectToMySQL(cls.database_schema_name).query_db(query)
+        if len(results) == 0:
+            return None
+        all_staff=[]
+        for row_in_db in results:
+            all_staff.append(cls(row_in_db))
+        return all_staff
+
+    #Get one staff will all Pools
+    @classmethod
+    def get_one_staff_with_pools(cls, data):
+        query = "SELECT * FROM users LEFT JOIN staffs ON users.id = staffs.staff_id LEFT JOIN pools ON staffs.pool_id = pools.id WHERE users.id = %(user_id)s;"
+        results = results = connectToMySQL(cls.database_schema_name).query_db(query, data)
+        print(results)
+        if len(results) == 0:
+            return None
+        else:
+            this_staff = cls(results[0])
+            for row_in_db in results:
+                pool_data = {
+                    'id': row_in_db['pools.id'],
+                    'name': row_in_db['name'],
+                    'street_address': row_in_db['street_address'],
+                    'city': row_in_db['city'],
+                    'state': row_in_db['state'],
+                    'zipcode': row_in_db['zipcode'],
+                    'water_volume': row_in_db['water_volume'],
+                    'indoor_outdoor': row_in_db['indoor_outdoor'],
+                    'sanitizer': row_in_db['sanitizer'],
+                    'created_at': row_in_db['pools.created_at'],
+                    'updated_at': row_in_db['pools.updated_at'],
+                    'user_id': row_in_db['user_id']
+                }
+                this_staff.pools.append(pool.Pool(pool_data))
+            return this_staff
+    
     # Get User by email
     @classmethod
     def get_user_by_email(cls,data):
@@ -86,6 +139,7 @@ class User:
         query = "UPDATE users SET password=%(password)s WHERE users.id = %(user_id)s;"
         return connectToMySQL(cls.database_schema_name).query_db(query,data)
 
+    
     @staticmethod
     def validate_user_registration(form_data):
         is_valid = True
@@ -117,6 +171,33 @@ class User:
         # if not form_data['agree_terms']:
         #     flash("Must Agree to Terms of Use", "registration")
         #     is_valid = False
+        return is_valid
+
+    @staticmethod
+    def validate_staff_registration(form_data):
+        is_valid = True
+        if len(form_data['first_name']) < 3:
+            flash("First must be at least 3 characters")
+            is_valid = False
+        if len(form_data['last_name']) < 3:
+            flash("Last Name must be at least 3 characters")
+            is_valid = False
+        if not EMAIL_REGEX.match(form_data['email']): 
+            flash("Invalid email address!")
+            is_valid = False
+        data = {
+            "email": form_data["email"]
+        }
+        found_user_or_false = User.get_user_by_email(data)
+        if found_user_or_false != False:
+            is_valid = False
+            flash("Email is Already Registered")
+        if len(form_data['password']) < 8:
+            flash("Password must be at Least 8 Characters")
+            is_valid = False
+        if form_data['password'] != form_data['confirm_password']:
+            flash("Passwords Don't Match", "registration")
+            is_valid = False
         return is_valid
 
     @staticmethod

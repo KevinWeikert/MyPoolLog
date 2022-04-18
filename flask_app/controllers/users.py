@@ -29,6 +29,40 @@ def register():
         session['first_name'] = request.form['first_name']
         return redirect('/dashboard')
         
+@app.route('/add-staff-page')
+def add_staff_page():
+    if 'user_id' not in session:
+        return redirect('/')
+    else:
+        data = {
+            "user_id": session['user_id']
+        }    
+        return render_template('add_staff.html', this_user = user.User.user_with_all_pools(data), all_staff = user.User.get_all_staff())
+
+@app.route('/add-staff-db', methods=['POST'])
+def add_staff_db():
+    if not user.User.validate_staff_registration(request.form):
+        return redirect ('/add-staff-page')
+    else:
+        pw_hash = bcrypt.generate_password_hash(request.form['password'])
+        data = {
+            'first_name': request.form['first_name'],
+            'last_name': request.form['last_name'],
+            'email': request.form['email'],
+            'password': pw_hash,
+            'admin': request.form['admin'],
+        }
+        user.User.save_staff_user(data)
+        return redirect('/dashboard')
+
+@app.route('/add-staff-pool', methods=['POST'])
+def add_staff_member_to_pool():
+    data = {
+        'staff_id': request.form['staff_id'],
+        'pool_id': request.form['pool_id']
+    }
+    user.User.add_staff_pool(data)
+    return redirect('/dashboard')
 
 @app.route('/login', methods =['POST'])
 def login():
@@ -54,7 +88,7 @@ def dashboard():
         data = {
             "user_id": session['user_id']
         }    
-        return render_template('dashboard.html', this_user = user.User.user_with_all_pools(data))
+        return render_template('dashboard.html', this_user = user.User.user_with_all_pools(data), this_staff = user.User.get_one_staff_with_pools(data))
 
 @app.route('/my_account')
 def my_account():

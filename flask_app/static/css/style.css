@@ -19,6 +19,10 @@ nav{
     min-height: 400px;
 }
 
+.staff-list{
+    list-style: none;
+}
+
 @media only screen and (max-width: 600px){
     .pool-nav{
         max-width: 475px;

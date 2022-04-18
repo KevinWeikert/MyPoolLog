@@ -115,3 +115,14 @@ def add_advanced_reading_db(id):
     }
     reading.Reading.add_advanced_reading(data)
     return redirect(f"/pool/{id}")
+
+@app.route('/pool/<int:id>/readings/<int:reading_id>/delete')
+def delete_reading(id,reading_id):
+    if 'user_id' not in session:
+        return redirect('/')
+    else:
+        data={
+            'reading_id': reading_id
+        }
+        reading.Reading.delete_reading(data)
+        return redirect(f"/pool/{id}")
