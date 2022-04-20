@@ -112,7 +112,6 @@ class Pool:
                 one_reading = reading.Reading(reading_data)
                 one_reading.user = user_that_made_reading
                 this_pool.readings.append(one_reading)
-            print(this_pool.readings[1].user)
             return this_pool
 
     @classmethod

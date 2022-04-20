@@ -13,8 +13,8 @@ function get_one_pool_staff(id){
             allStaff.innerHTML += "<h1>No staff found.</h1>"
         } else {
             // Loop through staff for this pool - if we have any
-            if (data[0]["id"] == undefined || data[0]["id"] == null) {
-                allStaff.innerHTML += `<p class="fs-3">Staff: None found</p>`;
+            if (data[0]["first_name"] == undefined || data[0]["first_name"] == null) {
+                allStaff.innerHTML += `<p class="fs-3">No Staff Found</p>`;
             } else { // Loop through each staff
                 allStaff.innerHTML += `<p class="fs-3 text-center">Staff for this pool</p>`;
                 var newList = document.createElement("ul");

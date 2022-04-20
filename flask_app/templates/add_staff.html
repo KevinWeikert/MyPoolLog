@@ -150,6 +150,7 @@
               <!-- Select Staff Member -->
               <div class="form-floating mb-3">
                 <select class="form-select" name="staff_id" id="floatingState" aria-label="Select Staff Member" aria-placeholder="Select Staff Member">
+                  <option>Select Staff Member</option>
                   {%for one_staff in all_staff%}
                   {%if one_staff != None%}
                   <option value="{{one_staff.id}}">{{one_staff.first_name}} {{one_staff.last_name}}</option>
@@ -163,6 +164,7 @@
              <!-- Select Pool Dropdown for staff to add readings -->
               <div class="form-floating mb-3">
                 <select class="form-select" name="pool_id" id="floatingState" aria-label="Select Pool" aria-placeholder="Select Pool">
+                  <option>Select Pool</option>
                   {%for one_pool in this_user.pools%}
                   <option value="{{one_pool.id}}">{{one_pool.name}}</option>
                   {%endfor%}
